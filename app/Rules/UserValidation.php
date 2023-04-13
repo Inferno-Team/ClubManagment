@@ -24,6 +24,9 @@ class UserValidation implements Rule
      * @param  mixed  $value
      * @return bool
      */
+
+
+     // values =  [ [name => mohammed] , [email => e@gmail.com] , [password => 123123] ]
     public function passes($attribute, $value)
     {
         $this->values = $value;

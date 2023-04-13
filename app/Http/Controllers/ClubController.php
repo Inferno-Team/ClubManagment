@@ -25,7 +25,7 @@ class ClubController extends Controller
     }
     public function deleteClub(DeleteClubRequest $request)
     {
-        $club = Club::findOrFail($request->club_id);
+        $club = Club::find($request->club_id);
         $club->delete();
         User::find($club->manager_id)->delete();
         return LocalResponse::returnMessage('club deleted successfully.', 200);

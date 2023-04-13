@@ -20,7 +20,7 @@ class CreateUserSubscriptionsTable extends Migration
             $table->foreignId('subscription_id')->nullable()
                 ->references('id')->on('club_subscriptions')->nullOnDelete();
             $table->date('start_at');
-            $table->date('end_at');
+            $table->date('end_at')->nullable();
             $table->timestamps();
         });
     }

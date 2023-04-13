@@ -23,7 +23,7 @@ class UserController extends Controller
         return LocalResponse::returnData("login", [
             'token' => $token,
             'user' => $user
-        ]);
+        ], "Logged in succesffully.");
     }
 
     public function register(RegisterRequest $request)

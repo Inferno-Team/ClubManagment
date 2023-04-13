@@ -1,32 +1,44 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
 
-require('./bootstrap');
+require('./utils/bootstrap');
 
+// import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import JwPagination from 'jw-vue-pagination';
+import VueRouter from 'vue-router'
+import VueEllipseProgress from 'vue-ellipse-progress'
+import Toast, { POSITION } from "vue-toastification"
+import "vue-toastification/dist/index.css";
+import App from './layouts/App.vue';
+import { routes } from './utils/routes'
+import VueSidebarMenu from 'vue-sidebar-menu'
+
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
+import Vuelidate from 'vuelidate';
 window.Vue = require('vue').default;
+// Vue.use(IconsPlugin)
+// Vue.use(BootstrapVue)
+Vue.use(VueRouter)
+Vue.use(VueSidebarMenu)
+Vue.use(VueMaterial)
+Vue.use(Vuelidate)
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+Vue.use(VueEllipseProgress)
+Vue.use(Toast, {
+    position: POSITION.BOTTOM_LEFT,
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+});
+Vue.component('jw-pagination', JwPagination)
+const router = new VueRouter({
+    mode: 'history',
+    routes,
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+})
 
 const app = new Vue({
     el: '#app',
+    components: { App },
+    router
 });

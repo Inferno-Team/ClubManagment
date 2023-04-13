@@ -68,7 +68,6 @@ class CreateClubRequest extends FormRequest
             'email' => $this->manager['email'],
             'password' => Hash::make($this->manager['password']),
             'type' => 'manager',
-
         ];
     }
 }

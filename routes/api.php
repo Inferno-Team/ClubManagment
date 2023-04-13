@@ -8,34 +8,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Traits\LocalResponse;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::post('/login', [UserController::class, 'login']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('error403', function () {
-    return LocalResponse::returnError('يجب ان تقوم بتسجيل الدخول اولاً', 400);
+Route::get('error403', function () {
+    return LocalResponse::returnError('يجب ان تقوم بتسجيل الدخول اولاً', 403);
 })->name('login');
-Route::post('/login', [UserController::class, 'login']);
+
 Route::post('/register', [UserController::class, 'register']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['is_admin']], function () {
         // Club ( CRUD )
-        Route::post('create', [ClubController::class, 'createNewClub'])->prefix('club');
-        Route::post('delete', [ClubController::class, 'deleteClub'])->prefix('club');
 
         Route::post('search', [ClubController::class, 'searchClub'])->prefix('club');
         Route::get('/show/{id}', [ClubController::class, 'showClub'])->prefix('club');
         Route::get('/all', [ClubController::class, 'showAllClub'])->prefix('club');
+
+        Route::post('/create_club', [ClubController::class, 'createNewClub'])->prefix('club');
+        Route::post('/delete_club', [ClubController::class, 'deleteClub'])->prefix('club');
+
 
         // Subscription types (CRUD)
         Route::post('create', [SubscriptionController::class, 'createSubscription'])->prefix('subscription');
@@ -59,3 +52,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('subscribe-to-club', [CustomerController::class, 'subscribeToClub'])->prefix('customer');
     });
 });
+
+
+//  http://127.0.0.1/phpmyadmin/index.php?route=/database/structure&db=club
+
+// protocl + ip address : port number  + path +  ( route | file ) ? GET json { key : value }
