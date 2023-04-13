@@ -17,6 +17,9 @@ import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import Vuelidate from 'vuelidate';
+
+import MdModalDialog from 'vue-material-modal-dialog'
+// import 'vue-material-modal-dialog/dist/md-modal-dialog.css'
 window.Vue = require('vue').default;
 // Vue.use(IconsPlugin)
 // Vue.use(BootstrapVue)
@@ -24,6 +27,7 @@ Vue.use(VueRouter)
 Vue.use(VueSidebarMenu)
 Vue.use(VueMaterial)
 Vue.use(Vuelidate)
+Vue.use(MdModalDialog)
 
 Vue.use(VueEllipseProgress)
 Vue.use(Toast, {

@@ -34,7 +34,9 @@ class CreateClubRequest extends FormRequest
             'location' => 'required|max:255',
             'lat' => 'required|max:90',
             'lng' => 'required|max:90',
-            'manager' => ['required', new UserValidation],
+            'manager' => 'required',
+            'manager.name' => 'required',
+            'manager.password' => 'required',
             'manager.email' => 'email|unique:users,email'
         ];
     }
