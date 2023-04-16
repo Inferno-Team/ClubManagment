@@ -1,5 +1,5 @@
 <template>
-    <md-modal-dialog>
+    <md-modal-dialog v-slot="{ club }">
         <md-dialog-title>Create New Club</md-dialog-title>
         <md-dialog-content>
             <md-dialog-title>Club Details</md-dialog-title>
@@ -13,11 +13,11 @@
             </md-field>
             <md-field>
                 <label for="club_lat">Location lat</label>
-                <md-input id="club_lat" @change="validate" type="number" v-model="club.lat" required />
+                <md-input id="club_lat" @change="validate" type="number" v-model="club.pos[0]" required />
             </md-field>
             <md-field>
                 <label for="club_lng">Loaction lng</label>
-                <md-input id="club_lng" @change="validate" type="number" v-model="club.lng" required />
+                <md-input id="club_lng" @change="validate" type="number" v-model="club.pos[1]" required />
             </md-field>
             <md-dialog-title>Manager Detials</md-dialog-title>
             <md-field>
@@ -47,17 +47,7 @@ export default {
 
 
     data: () => ({
-        club: {
-            name: "",
-            location: '',
-            lat: '',
-            lng: '',
-            manager: {
-                name: '',
-                password: '',
-                email: ''
-            }
-        },
+
         submitState: true
     }),
     methods: {

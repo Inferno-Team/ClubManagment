@@ -1,4 +1,3 @@
-
 require('./utils/bootstrap');
 
 // import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
@@ -7,10 +6,14 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import JwPagination from 'jw-vue-pagination';
 import VueRouter from 'vue-router'
 import VueEllipseProgress from 'vue-ellipse-progress'
-import Toast, { POSITION } from "vue-toastification"
+import Toast, {
+    POSITION
+} from "vue-toastification"
 import "vue-toastification/dist/index.css";
 import App from './layouts/App.vue';
-import { routes } from './utils/routes'
+import {
+    routes
+} from './utils/routes'
 import VueSidebarMenu from 'vue-sidebar-menu'
 
 import VueMaterial from 'vue-material'
@@ -41,8 +44,10 @@ const router = new VueRouter({
 
 })
 
-const app = new Vue({
+new Vue({
     el: '#app',
-    components: { App },
+    components: {
+        App
+    },
     router
 });

@@ -51,7 +51,7 @@ class ClubController extends Controller
     }
     public function showAllClub()
     {
-        $clubs = Club::all();
+        $clubs = Club::get()->map->format();
         return LocalResponse::returnData('clubs', $clubs, 'found', 200);
     }
 

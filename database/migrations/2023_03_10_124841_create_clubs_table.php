@@ -21,6 +21,7 @@ class CreateClubsTable extends Migration
             $table->double('lng')->default(0.0);
             $table->foreignId('manager_id')->references('id')
                 ->on('users')->cascadeOnDelete();
+            $table->unique('manager_id');
             $table->timestamps();
         });
     }

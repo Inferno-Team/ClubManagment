@@ -24,7 +24,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         Route::post('search', [ClubController::class, 'searchClub'])->prefix('club');
         Route::get('/show/{id}', [ClubController::class, 'showClub'])->prefix('club');
-        Route::get('/all', [ClubController::class, 'showAllClub'])->prefix('club');
+        Route::get('/clubs', [ClubController::class, 'showAllClub'])->prefix('club');
 
         Route::post('/create_club', [ClubController::class, 'createNewClub'])->prefix('club');
         Route::post('/delete_club', [ClubController::class, 'deleteClub'])->prefix('club');
