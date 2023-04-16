@@ -37,7 +37,7 @@ class CreateClubRequest extends FormRequest
             'manager' => 'required',
             'manager.name' => 'required',
             'manager.password' => 'required',
-            'manager.email' => 'email|unique:users,email'
+            'manager.email' => 'required|email|unique:users,email'
         ];
     }
     public function messages()

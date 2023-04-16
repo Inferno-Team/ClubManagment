@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Clubs\CreateClubRequest;
 use App\Http\Requests\Clubs\DeleteClubRequest;
 use App\Http\Requests\clubs\DeleteClubSubscrpitionRequest;
+use App\Http\Requests\Clubs\EditClubManager;
 use App\Http\Requests\clubs\MakeClubSubscrpitionRequest;
 use App\Http\Requests\Clubs\UpdateClubRequest;
 use App\Models\Club;
@@ -35,6 +36,18 @@ class ClubController extends Controller
         $club = Club::findOrFail($request->club_id);
         $club->update($request->all());
         return LocalResponse::returnMessage('club updated successfully.', 200);
+    }
+    public function editClubManager(EditClubManager $request)
+    {
+        $manager = User::where('id', $request->manager_id)->first();
+        if (isset($request->manager->email)) {
+            $emailUser = User::where('email', $request->email)->first();
+            if (isset($emailUser) && $manager->id != $emailUser->id) {
+                return LocalResponse::returnError('Email already on use.', 301);
+            }
+        }
+        $manager->update($request->values($manager));
+        return LocalResponse::returnData('manager', $manager, 'Manager Updated Successfully.', 200);
     }
     public function searchClub(Request $request)
     {

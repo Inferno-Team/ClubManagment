@@ -64,6 +64,7 @@ export default {
                         if (this.keepLoggedIn) {
                             localStorage.setItem(CONSTANCES.KEEP_LOGGED_IN, true);
                         }
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${data.login.token}`;
                         this.$router.push({ name: 'home' });
                     } else {
                         this.$toast.error(data.msg);

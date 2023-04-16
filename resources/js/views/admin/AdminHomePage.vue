@@ -15,7 +15,7 @@
             </md-table-toolbar>
 
             <md-table-empty-state md-label="No clubs found"
-                :md-description="`No club found for this '${search}' query. Try a different search term or create a new club.`">
+                :md-description="`No club found quere. Try a different search term or create a new club.`">
                 <md-button class="md-primary md-raised" @click="showAddNewClubModal">Create New Club</md-button>
             </md-table-empty-state>
             <md-table-row slot="md-table-row" slot-scope="{ item }">
@@ -28,7 +28,7 @@
                     <md-button @click="showEditNewClubModal(item)" class="md-icon-button">
                         <md-icon>edit</md-icon>
                     </md-button>
-                    <md-button class="md-icon-button">
+                    <md-button @click="showDeleteClubDialog(item)" class="md-icon-button">
                         <md-icon>delete</md-icon>
                     </md-button>
 
@@ -39,6 +39,9 @@
             <!-- <md-table-pagination :md-page-size="2" :md-page-options="[1, 2, 3, 4, 5, 6]" :md-update="updatePagination"
                 :md-data="users" :md-paginated-data.sync="paginatedClubs" /> -->
         </md-table>
+        <md-dialog-confirm :md-active.sync="remove_club_dialog_active" md-title="Removing Club"
+            :md-content="`Do you really want to remove <strong>${remove_club.name}</strong> ?`" md-confirm-text="Yes"
+            md-cancel-text="No" @md-cancel="() => remove_club = {}" @md-confirm="onClubRemoveConfirm" />
     </div>
 </template>
 
@@ -69,8 +72,11 @@ export default {
         search: null,
         searched: [],
         clubs: [],
+        clubsCopy: [],
         paginatedClubs: [],
         isLoading: true,
+        remove_club: {},
+        remove_club_dialog_active: false,
     }),
     methods: {
         getAllClubs() {
@@ -124,14 +130,70 @@ export default {
         },
 
         showEditNewClubModal(oldClub) {
+            this.clubsCopy = JSON.parse(JSON.stringify(this.clubs));
             this.$modal.show(EditClubDialog, {
                 club: oldClub
             })
-                .then(newClub => console.log(newClub))
-                .catch(error => { });
+                .then(club => {
+                    // send edit manager to server
+                    axios.post('/api/edit_club_manager', {
+                        manager_id: club.manager.id,
+                        name: club.manager.name,
+                        email: club.manager.email,
+                        password: club.manager.password,
+                    }).then((res) => {
+                        let data = res.data;
+                        if (data.code == 200) {
+                            let manager = data.manager;
+                            let index = this.clubs.indexOf(oldClub);
+                            if (index > -1) {
+                                this.clubs[index].manager = manager;
+                                this.searched = this.clubs;
+                            }
+                            this.$toast.success(data.msg);
+                        } else {
+                            this.$toast.warning(data.msg);
+                        }
+                    })
+                        .catch(this.handleError);
+                })
+                .catch((_) => {
+                    this.clubs = [... this.clubsCopy];
+                    this.searched = this.clubs;
+                })
+
         },
         updatePagination(page, pageSize, sort, sortOrder) {
             console.log('pagination has updated', page, pageSize, sort, sortOrder);
+        },
+        showDeleteClubDialog(club) {
+            this.remove_club = club;
+            this.remove_club_dialog_active = true;
+        },
+        onClubRemoveConfirm() {
+            axios.post('/api/delete_club', {
+                club_id: this.remove_club.id,
+            })
+                .then((res) => {
+                    let data = res.data;
+                    if (data.code == 200) {
+                        this.$toast.success(data.msg);
+                        let index = this.clubs.indexOf(this.remove_club);
+                        if (index > -1) {
+                            this.clubs.splice(index, 1);
+                            this.searched = this.clubs;
+                        } else {
+                            this.$toast.warning('Item not found');
+                        }
+                    } else {
+                        this.$toast.warning(data.msg);
+                    }
+                })
+                .catch(this.handleError)
+        },
+        handleError(error) {
+            this.$toast.error("Error please try again later.");
+            console.error(error);
         }
     }
 

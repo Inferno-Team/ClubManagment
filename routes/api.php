@@ -27,7 +27,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/clubs', [ClubController::class, 'showAllClub'])->prefix('club');
 
         Route::post('/create_club', [ClubController::class, 'createNewClub'])->prefix('club');
-        Route::post('/delete_club', [ClubController::class, 'deleteClub'])->prefix('club');
+        Route::post('/delete_club', [ClubController::class, 'deleteClub']);
+        Route::post('/edit_club_manager', [ClubController::class, 'editClubManager']);
 
 
         // Subscription types (CRUD)
