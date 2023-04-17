@@ -2,7 +2,7 @@
     <div>
         <md-progress-spinner class="spinner" v-if="isLoading" :md-diameter="100" :md-stroke="5" md-mode="indeterminate" />
         <md-table v-else v-model="searched" md-card md-sort="name" md-sort-order="asc" md-fixed-header
-            @md-selected="onClubSelected" style="height: 100vh;">
+            style="height: 100vh;">
 
             <md-table-toolbar>
                 <div class="md-toolbar-section-start">
@@ -20,7 +20,10 @@
             </md-table-empty-state>
             <md-table-row slot="md-table-row" slot-scope="{ item }">
                 <md-table-cell md-label="ID" md-numeric>{{ item.id }}</md-table-cell>
-                <md-table-cell md-label="Name">{{ item.name }}</md-table-cell>
+                <md-table-cell md-label="Name">
+                    <p class="my-auto" style="cursor: pointer;font-weight: bold;" @click="onClubSelected(item)">{{ item.name
+                    }}</p>
+                </md-table-cell>
                 <md-table-cell md-label="Location">{{ item.location }}</md-table-cell>
                 <md-table-cell md-label="Manager Name">{{ item.manager.name }}</md-table-cell>
                 <md-table-cell md-label="Manager Email">{{ item.manager.email }}</md-table-cell>
@@ -126,7 +129,10 @@ export default {
                 })
         },
         onClubSelected(club) {
-
+            this.$router.push({
+                name: 'single-club',
+                params: { id: club.id }
+            })
         },
 
         showEditNewClubModal(oldClub) {

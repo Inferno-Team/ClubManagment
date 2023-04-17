@@ -15,21 +15,29 @@ import {
     routes
 } from './utils/routes'
 import VueSidebarMenu from 'vue-sidebar-menu'
-
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
-import Vuelidate from 'vuelidate';
+// import Vuelidate from 'vuelidate';
 
 import MdModalDialog from 'vue-material-modal-dialog'
-// import 'vue-material-modal-dialog/dist/md-modal-dialog.css'
+
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faHatWizard } from '@fortawesome/free-solid-svg-icons'
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 window.Vue = require('vue').default;
 // Vue.use(IconsPlugin)
 // Vue.use(BootstrapVue)
 Vue.use(VueRouter)
 Vue.use(VueSidebarMenu)
 Vue.use(VueMaterial)
-Vue.use(Vuelidate)
+// Vue.use(Vuelidate)
 Vue.use(MdModalDialog)
 
 Vue.use(VueEllipseProgress)
@@ -43,6 +51,10 @@ const router = new VueRouter({
     routes,
 
 })
+
+
+library.add(faHatWizard)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 new Vue({
     el: '#app',

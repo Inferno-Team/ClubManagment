@@ -34,8 +34,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         // Subscription types (CRUD)
         Route::post('create', [SubscriptionController::class, 'createSubscription'])->prefix('subscription');
         Route::post('delete', [SubscriptionController::class, 'deleteSubscription'])->prefix('subscription');
-        Route::post('update', [SubscriptionController::class, 'updateSubscription'])->prefix('subscription');
+        Route::post('edit', [SubscriptionController::class, 'updateSubscription'])->prefix('subscription');
         Route::get('/all', [SubscriptionController::class, 'showAllSubscription'])->prefix('subscription');
+        Route::get('/{id}', [SubscriptionController::class, 'showSingleSubscription'])->prefix('subscription');
     });
     Route::group(['middleware' => ['is_manager']], function () {
         Route::post('update', [ClubController::class, 'updateClub'])->prefix('club');

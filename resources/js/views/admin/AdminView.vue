@@ -1,6 +1,8 @@
 <template>
     <div class="dashboard">
-        <sidebar-menu :menu="menu" :relative="true" @item-click="onItemClick" />
+        <sidebar-menu :menu="menu" :relative="true" @item-click="onItemClick" theme="white-theme">
+
+        </sidebar-menu>
         <div class="my-container">
             <md-progress-spinner class="spinner" v-if="addNewClubStatus" :md-diameter="100" :md-stroke="5"
                 md-mode="indeterminate" />
@@ -11,27 +13,37 @@
 
 <script>
 import CreateNewClubDialog from '../../components/dialogs/CreateNewClubDialog.vue'
+import CreateNewSubscription from '../../components/dialogs/CreateNewSubscription.vue';
 export default {
     data: () => ({
         addNewClubStatus: false,
         menu: [
             {
-                header:true,
-                title:'Club Managment'
+                header: true,
+                title: 'Club Managment'
             },
             {
                 header: false,
                 title: "Dashboard",
                 href: "/admin/",
-                icon: {
-                    element: 'span',
-                    class: 'dashboard-icon',
-                }
+                icon: 'fa fa-bar-chart'
+
             },
             {
                 title: "Create Club",
                 icon: "fa fa-university",
             },
+            {
+                title: 'Subscriptions',
+                icon: 'fa fa-credit-card',
+                href:'/admin/subscriptions',
+                child: [
+                    {
+                        title: 'Create New Subscription',
+                        icon: 'fa fa-plus-square-o'
+                    }
+                ]
+            }
         ]
     }),
     methods: {
@@ -39,6 +51,10 @@ export default {
             if (item.title === 'Create Club') {
                 this.$modal.show(CreateNewClubDialog)
                     .then(this.addNewClub)
+                    .catch(error => { });
+            } else if (item.title == 'Create New Subscription') {
+                this.$modal.show(CreateNewSubscription)
+                    .then(this.addNewSubscription)
                     .catch(error => { });
             }
         },
@@ -54,6 +70,24 @@ export default {
                         this.$toast.error(data.msg);
                     // let route = this.$router;
                     // console.log(route);
+                })
+                .catch((error) => {
+                    this.addNewClubStatus = false;
+                    console.log(error);
+                    this.$toast.error('Error try again later.');
+                })
+        },
+        addNewSubscription(sub) {
+            this.addNewClubStatus = true;
+            axios.post('/subscription/api/create', sub)
+                .then((response) => {
+                    this.addNewClubStatus = false;
+                    let data = response.data;
+                    if (data.code == 200 || data.code == 201)
+                        this.$toast.success(data.msg);
+                    else
+                        this.$toast.error(data.errors['name'][0]);
+
                 })
                 .catch((error) => {
                     this.addNewClubStatus = false;
@@ -80,25 +114,18 @@ export default {
 }
 
 .v-sidebar-menu .vsm--toggle-btn::after {
-    content: "\e5d2" !important;
-    font-family: "Material Icons" !important;
+    content: "\f03a" !important;
+    font-family: "FontAwesome" !important;
 }
 
 .v-sidebar-menu .vsm--arrow::after {
     content: "\f060" !important;
-    font-family: "Material Icons" !important;
+    font-family: "FontAwesome" !important;
 }
 
 .spinner {
     top: 50%;
     right: 33.34%;
     position: absolute;
-}
-
-
-
-.dashboard-icon {
-    content: "\e5d2" !important;
-    font-family: "Material Icons" !important;
 }
 </style>

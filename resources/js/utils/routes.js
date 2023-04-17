@@ -3,9 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import EmptyPage from '../layouts/EmptyPage.vue'
 import AdminView from '../views/admin/AdminView.vue'
 import AdminHomePage from '../views/admin/AdminHomePage.vue'
-import {
-    CONSTANCES
-} from './utils'
+import AllSubscriptions from '../views/admin/AllSubscriptions.vue'
+import SingleSubscriptionPage from '../views/admin/SingleSubscriptionPage.vue'
 export const routes = [
 
     {
@@ -28,9 +27,22 @@ export const routes = [
                 component: AdminHomePage
             },
             {
-                path: 'create-new-manager',
-                name: 'create-new-manager',
-                component: EmptyPage
+                path: '/club/:id',
+                name: 'single-club',
+                component: EmptyPage,
+                props: true
+            },
+            {
+                path: 'subscriptions',
+                name: 'subscriptions',
+                component: AllSubscriptions
+            },
+            {
+                path: 'subscriptions/:id',
+                name: 'single-subscription',
+                component: SingleSubscriptionPage,
+                props: true,
+
             }
 
         ]

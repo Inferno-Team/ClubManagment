@@ -29,13 +29,13 @@ class UpdateSubscriptionRequest extends FormRequest
     {
         return [
             "id" => "required|exists:subscription_types,id",
-            "name" => "required|max:255|unique:subscription_types,name",
+            "name" => "required|string|max:255|unique:subscription_types,name",
         ];
     }
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(LocalResponse::returnError(
-            'Error in Create update subscription',
+            'Error in update subscription',
             401,
             $validator->errors()
         ));

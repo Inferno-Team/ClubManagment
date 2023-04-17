@@ -25,14 +25,21 @@ class SubscriptionController extends Controller
     }
     public function updateSubscription(UpdateSubscriptionRequest $request)
     {
-        SubscriptionType::find($request->id)->update([
+        $sub = SubscriptionType::where('id', $request->id)->first();
+
+        $sub->update([
             'name' => $request->name,
         ]);
-        return LocalResponse::returnMessage("subscription updated");
+        return LocalResponse::returnData("sub", $sub, 'Subscription updated successffully.');
     }
     public function showAllSubscription()
     {
         $subscriptions = SubscriptionType::all();
         return LocalResponse::returnData("subs", $subscriptions);
+    }
+    public function showSingleSubscription(int $id)
+    {
+        $subscription = SubscriptionType::where('id', $id)->first();
+        return LocalResponse::returnData("sub", $subscription);
     }
 }
