@@ -7,6 +7,12 @@
             <md-progress-spinner class="spinner" v-if="addNewClubStatus" :md-diameter="100" :md-stroke="5"
                 md-mode="indeterminate" />
             <router-view v-else />
+
+        </div>
+        <div class="floating-container">
+            <div class="floating-button" @click.prevent="logout">
+                <md-icon class="p-4" >logout</md-icon>
+            </div>
         </div>
     </div>
 </template>
@@ -14,6 +20,7 @@
 <script>
 import CreateNewClubDialog from '../../components/dialogs/CreateNewClubDialog.vue'
 import CreateNewSubscription from '../../components/dialogs/CreateNewSubscription.vue';
+import { CONSTANCES } from '../../utils/utils';
 export default {
     data: () => ({
         addNewClubStatus: false,
@@ -23,20 +30,23 @@ export default {
                 title: 'Club Managment'
             },
             {
-                header: false,
-                title: "Dashboard",
-                href: "/admin/",
-                icon: 'fa fa-bar-chart'
+
+                title: "Clubs",
+                href: "/admin/clubs/",
+                icon: 'fa fa-bar-chart',
+                child: [
+                    {
+                        title: "Create Club",
+                        icon: "fa fa-university",
+                    },
+                ]
 
             },
-            {
-                title: "Create Club",
-                icon: "fa fa-university",
-            },
+
             {
                 title: 'Subscriptions',
                 icon: 'fa fa-credit-card',
-                href:'/admin/subscriptions',
+                href: '/admin/subscriptions',
                 child: [
                     {
                         title: 'Create New Subscription',
@@ -48,9 +58,10 @@ export default {
     }),
     methods: {
         onItemClick(event, item, node) {
+
             if (item.title === 'Create Club') {
                 this.$modal.show(CreateNewClubDialog)
-                    .then(this.addNewClub)
+                    .then(this.club)
                     .catch(error => { });
             } else if (item.title == 'Create New Subscription') {
                 this.$modal.show(CreateNewSubscription)
@@ -94,6 +105,11 @@ export default {
                     console.log(error);
                     this.$toast.error('Error try again later.');
                 })
+        },
+        logout() {
+            axios.defaults.headers.common['Authorization'] = ``;
+            localStorage.removeItem(CONSTANCES.TOKEN_NAME);
+            window.location.href = "/login";
         }
     }
 }

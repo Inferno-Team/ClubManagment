@@ -1,7 +1,5 @@
 <template>
-    <div>
-
-    </div>
+    <div></div>
 </template>
 
 <script>
@@ -16,11 +14,13 @@ export default {
         else {
             switch (userType) {
                 case TYPES.ADMIN:
-                this.$router.push({ name: 'admin-page' })
+                    this.$router.push({ name: 'admin-page' })
                     break;
-
+                case TYPES.MANAGER:
+                    this.$router.push({ name: 'manager-page' });
+                    break;
                 default:
-                this.$router.push({ name: '404-page' })
+                    this.$router.push({ name: '404-page' })
                     break;
             }
         }

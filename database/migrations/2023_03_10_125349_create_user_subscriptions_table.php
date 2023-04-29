@@ -17,9 +17,10 @@ class CreateUserSubscriptionsTable extends Migration
             $table->id();
             $table->foreignId('customer_id')->nullable()
                 ->references('id')->on('users')->nullOnDelete();
-            $table->foreignId('subscription_id')->nullable()
-                ->references('id')->on('club_subscriptions')->nullOnDelete();
+            $table->foreignId('subscription_id')
+                ->references('id')->on('club_subscriptions')->cascadeOnDelete();
             $table->date('start_at');
+            $table->double('price');
             $table->date('end_at')->nullable();
             $table->timestamps();
         });

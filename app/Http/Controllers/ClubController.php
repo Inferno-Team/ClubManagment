@@ -8,12 +8,14 @@ use App\Http\Requests\clubs\DeleteClubSubscrpitionRequest;
 use App\Http\Requests\Clubs\EditClubManager;
 use App\Http\Requests\clubs\MakeClubSubscrpitionRequest;
 use App\Http\Requests\Clubs\UpdateClubRequest;
+use App\Http\Requests\manager\DeleteCustomerSubscriptionRequest;
 use App\Models\Club;
 use Illuminate\Http\Request;
 use App\Http\Traits\LocalResponse;
 use App\Models\ClubSubScription;
 use App\Models\User;
 use App\Models\UserSubscription;
+use Illuminate\Support\Facades\Auth;
 
 class ClubController extends Controller
 {
@@ -21,6 +23,7 @@ class ClubController extends Controller
     {
         $manager = User::create($request->getManager());
         $club = Club::create($request->values($manager->id));
+        // $club = Club::find($club->id)->with('manager');
         $club->manager = $manager;
         return LocalResponse::returnData('club', $club, 'created successfully.', 201);
     }
@@ -57,10 +60,22 @@ class ClubController extends Controller
             ->get();
         return LocalResponse::returnData('clubs', $clubs, 'found', 200);
     }
+
+    public function myClub()
+    {
+        $manager = Auth::user();
+        $club = Club::where('manager_id', $manager->id)->with('customer_sub')->first()->myClubFormat();
+        return LocalResponse::returnData('club', $club, 'found', isset($club) ? 200 : 401);
+    }
+
+    public function mySingleClubSubscription(int $id){
+        $clubSubscription = ClubSubScription::where('id',$id)->first()->format();
+        return LocalResponse::returnData('sub', $clubSubscription, 'found', isset($clubSubscription) ? 200 : 401);
+    }
     public function showClub(int $id)
     {
-        $club = Club::findOrFail($id);
-        return LocalResponse::returnData('club', $club, 'found', 200);
+        $club = Club::where('id', $id)->with('customer_sub')->first()->formatForAdmin();
+        return LocalResponse::returnData('club', $club, 'found', isset($club) ? 200 : 401);
     }
     public function showAllClub()
     {
@@ -79,10 +94,25 @@ class ClubController extends Controller
         return LocalResponse::returnMessage("Club Subscrpition deleted successfully.", 200);
     }
 
+    public function deleteCustomerSubscription(DeleteCustomerSubscriptionRequest $request)
+    {
+        // check if this request is on this manager customers
+        $manager = Auth::user();
+        $club = Club::where('manager_id', $manager->id)->first();
+        $userSubscription = UserSubscription::where('id', $request->id)->with('sub')->first();
+        if ($userSubscription->sub->club_id == $club->id) {
+            // we can delete this subscription now
+            $userSubscription->delete();
+            return LocalResponse::returnMessage('Subscription Deleted successfully');
+        } else return LocalResponse::returnMessage("this subscription doesn't belongs to your club.");
+    }
+
     public function getAllSubscriptions(Request $request)
     {
         $club = $request->user()->club;
-        $subscriptions = ClubSubScription::where('club_id', $club->id)->get();
+
+
+        $subscriptions = ClubSubScription::where('club_id', $club->id)->get()->map->format();
         return LocalResponse::returnData('subscriptions', $subscriptions, 'found', 200);
     }
 

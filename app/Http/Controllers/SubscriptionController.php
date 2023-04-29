@@ -34,12 +34,12 @@ class SubscriptionController extends Controller
     }
     public function showAllSubscription()
     {
-        $subscriptions = SubscriptionType::all();
+        $subscriptions = SubscriptionType::get()->map->getAllFormat();
         return LocalResponse::returnData("subs", $subscriptions);
     }
     public function showSingleSubscription(int $id)
     {
-        $subscription = SubscriptionType::where('id', $id)->first();
+        $subscription = SubscriptionType::where('id', $id)->first()->singleSubscriptionFormat();
         return LocalResponse::returnData("sub", $subscription);
     }
 }

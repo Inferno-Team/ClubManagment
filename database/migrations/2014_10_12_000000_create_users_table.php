@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('phone')->unique()->nullable();
             $table->enum('type', ['admin', 'manager', 'customer', 'trainer'])
                 ->default('customer'); // R -100 , +100
-            $table->int('age')->nullable();
+            $table->integer('age')->nullable();
             $table->string('avatar')->nullable();
             $table->string('password');
             $table->rememberToken();

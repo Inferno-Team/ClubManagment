@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateSubscriptionTypesTable extends Migration
@@ -18,6 +19,13 @@ class CreateSubscriptionTypesTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
+        DB::table('subscription_types')->insert([
+            'name' =>'Monthly',
+        ]);
+        DB::table('subscription_types')->insert([
+            'name' =>'Yearly',
+        ]);
+
     }
 
     /**

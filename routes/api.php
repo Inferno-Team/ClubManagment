@@ -19,40 +19,46 @@ Route::get('error403', function () {
 
 Route::post('/register', [UserController::class, 'register']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
+
+
     Route::group(['middleware' => ['is_admin']], function () {
         // Club ( CRUD )
 
         Route::post('search', [ClubController::class, 'searchClub'])->prefix('club');
-        Route::get('/show/{id}', [ClubController::class, 'showClub'])->prefix('club');
-        Route::get('/clubs', [ClubController::class, 'showAllClub'])->prefix('club');
+        Route::get('/show/club/{id}', [ClubController::class, 'showClub'])->prefix('club');
+        Route::get('clubs', [ClubController::class, 'showAllClub'])->prefix('club');
 
-        Route::post('/create_club', [ClubController::class, 'createNewClub'])->prefix('club');
-        Route::post('/delete_club', [ClubController::class, 'deleteClub']);
-        Route::post('/edit_club_manager', [ClubController::class, 'editClubManager']);
+        Route::post('create_club', [ClubController::class, 'createNewClub'])->prefix('club');
+        Route::post('delete_club', [ClubController::class, 'deleteClub']);
+        Route::post('edit_club_manager', [ClubController::class, 'editClubManager']);
 
 
         // Subscription types (CRUD)
         Route::post('create', [SubscriptionController::class, 'createSubscription'])->prefix('subscription');
         Route::post('delete', [SubscriptionController::class, 'deleteSubscription'])->prefix('subscription');
         Route::post('edit', [SubscriptionController::class, 'updateSubscription'])->prefix('subscription');
-        Route::get('/all', [SubscriptionController::class, 'showAllSubscription'])->prefix('subscription');
-        Route::get('/{id}', [SubscriptionController::class, 'showSingleSubscription'])->prefix('subscription');
+        Route::get('all', [SubscriptionController::class, 'showAllSubscription'])->prefix('subscription');
     });
+
     Route::group(['middleware' => ['is_manager']], function () {
         Route::post('update', [ClubController::class, 'updateClub'])->prefix('club');
-        Route::post('make-club-subscription', [
-            ClubController::class,
-            'makeClubSubscription'
-        ])->prefix('subscription');
+        Route::get('my-club', [ClubController::class, 'myClub'])->prefix('club');
+        Route::get('my-single-club-subscription/{id}', [ClubController::class, 'mySingleClubSubscription'])->prefix('club');
+        Route::post('make-club-subscription', [ClubController::class, 'makeClubSubscription'])->prefix('subscription');
         Route::post('delete-club-subscription', [ClubController::class, 'deleteClubSubscription'])->prefix('subscription');
         Route::get('get-all-subscriptions', [ClubController::class, 'getAllSubscriptions'])->prefix('subscription');
         Route::get('get-all-user-subscriptions', [ClubController::class, 'getAllUsersSubscriptions'])
             ->prefix('subscription');
+        Route::post('delete-customer-subscription', [ClubController::class, 'deleteCustomerSubscription'])->prefix('subscription');
     });
 
     Route::group(['middleware' => ['is_customer']], function () {
         Route::post('subscribe-to-club', [CustomerController::class, 'subscribeToClub'])->prefix('customer');
     });
+    Route::group(['middleware' => ['not_customer']], function () {
+        Route::get('show/{id}', [SubscriptionController::class, 'showSingleSubscription'])->prefix('subscription');
+    });
+
 });
 
 
