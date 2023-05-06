@@ -47,3 +47,5 @@ class LoginRequest extends FormRequest
         throw new HttpResponseException(LocalResponse::returnError('خطأ في تجسيل الدخول', 401, $validator->errors()));
     }
 }
+
+/// [ "email" => [exists,email] , "password" => [required]]

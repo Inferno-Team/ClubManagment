@@ -19,11 +19,12 @@ class UserController extends Controller
                 'password' => ['كملة السر خطأ']
             ]);
 
+
         $token = $user->createToken('authToken')->plainTextToken;
         return LocalResponse::returnData("login", [
             'token' => $token,
             'user' => $user
-        ], "Logged in succesffully.");
+        ], "Logged in succesffully.",200);
     }
 
     public function register(RegisterRequest $request)

@@ -11,5 +11,5 @@ window.axios = require('axios');
 let token = localStorage.getItem(CONSTANCES.TOKEN_NAME);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-if (token != null || token != undefined)
+if (token != null && token != undefined)
     window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;

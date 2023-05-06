@@ -46,6 +46,7 @@ const adminGaurd = function (to, from, next) {
 }
 
 const managerGaurd = function (to, from, next) {
+
     axios.get('/api/user')
         .then(response => {
             if (response.data.type == TYPES.MANAGER)
@@ -69,7 +70,7 @@ export const routes = [
         path: "/login",
         name: "login",
         component: LoginView,
-        beforeEnter:loginGuard
+        beforeEnter: loginGuard
     },
 
     {

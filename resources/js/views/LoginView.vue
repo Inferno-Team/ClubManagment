@@ -6,15 +6,14 @@
 
                 <md-field class="mx-auto" id="email-container">
                     <label for="email">Email</label>
-                    <md-input name="email" id="email" autocomplete="off" v-model="form.email" :disabled="sending" />
+                    <md-input name="email" id="email"  type="email" autocomplete="off" v-model="form.email" :disabled="sending" />
                 </md-field>
 
                 <md-field class="mx-auto">
                     <label for="password">Password</label>
-                    <md-input name="password" id="password" autocomplete="off" v-model="form.password"
-                        :disabled="sending" type="password"/>
+                    <md-input name="password" id="password" autocomplete="off" v-model="form.password" :disabled="sending"
+                        type="password" />
                 </md-field>
-                <md-checkbox class="md-primary" v-model="keepLoggedIn">Keep me logged in</md-checkbox>
                 <md-button type="submit" class="md-primary md-raised">Login</md-button>
             </form>
 
@@ -61,14 +60,12 @@ export default {
                         this.$toast.success(data.msg);
                         localStorage.setItem(CONSTANCES.TOKEN_NAME, data.login.token);
                         localStorage.setItem(CONSTANCES.USER_TYPE, data.login.user.type);
-                        if (this.keepLoggedIn) {
-                            localStorage.setItem(CONSTANCES.KEEP_LOGGED_IN, true);
-                        }
                         axios.defaults.headers.common['Authorization'] = `Bearer ${data.login.token}`;
                         this.$router.push({ name: 'home' });
                     } else {
                         this.$toast.error(data.msg);
                         this.errors = data.errors;
+                        // errors : [password:['required']]
                         if (this.errors.email == undefined) this.errors.email = [];
                         else this.dialogStates.email = true;
                         if (this.errors.password == undefined) this.errors.password = [];
@@ -86,9 +83,13 @@ export default {
 </script>
 
 <style scoped>
+
 .full-width {
 
-    height: 100vh;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(80deg, #E778DB, #FAA7E6, #B5ADF6, #98A5FA, #7D7AE5);
 }
 
@@ -107,19 +108,19 @@ export default {
 
 .side-image {
     position: absolute;
-    height: calc(100% - 75px);
-    top: 25px;
+    width: 44%;
+    top: 8%;
     right: 17%;
     z-index: 2;
 }
 
 .md-field {
-    width: 22rem;
+    width: 70%;
 }
 
 .md-raised {
-    width: 20rem;
-    margin-left: 6.25rem !important;
+    width: 50%;
+    margin-left: 25% !important;
 }
 
 .top-login-text {
@@ -129,5 +130,25 @@ export default {
 
 .md-checkbox {
     margin-left: 5.2rem;
+}
+
+@media screen and (max-width: 768px) {
+    .side-image {
+        z-index: 0;
+        opacity: 0.75;
+        width: 62%;
+        margin-right: 1%;
+        margin-top: 30%;
+
+    }
+    .login-container{
+        width: 75%;
+        margin-left: 6%;
+        margin-top: 25%;
+        height: 58%;
+    }
+    .top-login-text {
+        margin-top: 4rem;
+    }
 }
 </style>
