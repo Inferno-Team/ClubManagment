@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     Route::group(['middleware' => ['is_manager']], function () {
+        Route::get('just-name', [SubscriptionController::class, 'showJustNameSubscription'])->prefix('subscription');
         Route::post('update', [ClubController::class, 'updateClub'])->prefix('club');
         Route::get('my-club', [ClubController::class, 'myClub'])->prefix('club');
         Route::get('my-single-club-subscription/{id}', [ClubController::class, 'mySingleClubSubscription'])->prefix('club');
@@ -50,6 +51,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('get-all-user-subscriptions', [ClubController::class, 'getAllUsersSubscriptions'])
             ->prefix('subscription');
         Route::post('delete-customer-subscription', [ClubController::class, 'deleteCustomerSubscription'])->prefix('subscription');
+        Route::post('approve-customer-subscription', [ClubController::class, 'approveCustomerSubscription'])->prefix('subscription');
+
+        Route::get('get-all-manager-requests',[ClubController::class,'getAllManagerRequests']);
     });
 
     Route::group(['middleware' => ['is_customer']], function () {

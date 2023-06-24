@@ -141,13 +141,13 @@ export default {
                 else {
                     this.$toast.error('Club Type not found.');
                     setTimeout(() => {
-                        // this.$router.back(-1);
+                        this.$router.back(-1);
                     }, 3000);
                 }
             })
             .catch((error) => {
                 console.log(error);
-                // this.$router.back(-1);
+                this.$router.back(-1);
             })
     },
     computed: {

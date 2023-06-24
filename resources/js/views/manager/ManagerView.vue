@@ -18,10 +18,18 @@
 </template>
 
 <script>
-import CreateNewClubDialog from '../../components/dialogs/CreateNewClubDialog.vue'
-import CreateNewSubscription from '../../components/dialogs/CreateNewSubscription.vue';
+import CreateNewSubscriptionForClub from '../../components/dialogs/CreateNewSubscriptionForClub.vue';
 import { CONSTANCES } from '../../utils/utils';
 export default {
+    mounted() {
+        axios.get('/subscription/api/just-name')
+            .then((res) => {
+                let data = res.data;
+                console.log(data);
+                if (data.code == 200)
+                    this.subscriptions = data.subs;
+            })
+    },
     data: () => ({
         addNewClubStatus: false,
         menu: [
@@ -53,55 +61,39 @@ export default {
                 href: '/manager/customers',
                 child: [
                     {
-                        title: 'Add New Subscription',
-                        icon: 'fa fa-plus-square-o'
+                        title: 'All Requests',
+                        icon: 'fa fa-plus-square-o',
+                        href:"/manager/requests"
                     }
                 ]
             },
 
-        ]
+        ],
+        subscriptions: []
     }),
     methods: {
         onItemClick(event, item, node) {
-            if (item.title === 'Create Club') {
-                this.$modal.show(CreateNewClubDialog)
-                    .then(this.addNewClub)
-                    .catch(error => { });
-            } else if (item.title == 'Create New Subscription') {
-                this.$modal.show(CreateNewSubscription)
+            if (item.title == 'Create New Subscription') {
+                this.$modal.show(CreateNewSubscriptionForClub, {
+                    'subs': this.subscriptions
+                })
                     .then(this.addNewSubscription)
                     .catch(error => { });
             }
         },
-        addNewClub(club) {
+        addNewSubscription({ sub, price }) {
             this.addNewClubStatus = true;
-            axios.post('/club/api/create_club', club)
+            axios.post('/subscription/api/make-club-subscription', {
+                subscription_id:sub,
+                price:price
+            })
                 .then((response) => {
                     this.addNewClubStatus = false;
                     let data = response.data;
                     if (data.code == 200 || data.code == 201)
                         this.$toast.success(data.msg);
                     else
-                        this.$toast.error(data.msg);
-                    // let route = this.$router;
-                    // console.log(route);
-                })
-                .catch((error) => {
-                    this.addNewClubStatus = false;
-                    console.log(error);
-                    this.$toast.error('Error try again later.');
-                })
-        },
-        addNewSubscription(sub) {
-            this.addNewClubStatus = true;
-            axios.post('/subscription/api/create', sub)
-                .then((response) => {
-                    this.addNewClubStatus = false;
-                    let data = response.data;
-                    if (data.code == 200 || data.code == 201)
-                        this.$toast.success(data.msg);
-                    else
-                        this.$toast.error(data.errors['name'][0]);
+                        this.$toast.warning(data.msg);
 
                 })
                 .catch((error) => {

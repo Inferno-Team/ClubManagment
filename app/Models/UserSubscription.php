@@ -18,12 +18,13 @@ class UserSubscription extends Model
         'start_at',
         'price',
         'end_at',
+        "status"
     ];
 
     public function isValid(): Attribute
     {
         return new Attribute(
-            get: fn () => Carbon::now()->between($this->start_at,$this->end_at),
+            get: fn () => Carbon::now()->between($this->start_at, $this->end_at) && $this->status == 'approved',
         );
     }
     public function customer(): BelongsTo
@@ -34,25 +35,44 @@ class UserSubscription extends Model
     {
         return $this->belongsTo(ClubSubScription::class, 'subscription_id');
     }
+    public function approve()
+    {
+        $this->status = "approved";
+        $this->update();
+    }
     public function format()
     {
         return [
+            "id" => $this->id,
             'customer' => $this->customer->formatUser(),
             'sub' => $this->sub->format(),
             'is_valid' => $this->is_valid,
+            "price" => $this->price,
             'end_at' => $this->end_at,
             'start_at' => $this->start_at
         ];
     }
-    public function formatWithoutSubscriotionRelation(){
+    public function formatOnly()
+    {
+        return [
+            "id" => $this->id,
+            'customer' => $this->customer->formatUser(),
+            'is_valid' => $this->is_valid,
+            'end_at' => $this->end_at,
+            'start_at' => $this->start_at,
+            "price" => $this->price,
+        ];
+    }
+    public function formatWithoutSubscriotionRelation()
+    {
         return (object)[
             "id" => $this->id,
-            "customer"=> $this->customer,
-            "start_at"=> $this->start_at,
-            "end_at"=> $this->end_at,
-            "price"=> $this->price,
-            "is_valid"=> $this->is_valid,
-            "sub"=> $this->sub->format(),
+            "customer" => $this->customer,
+            "start_at" => $this->start_at,
+            "end_at" => $this->end_at,
+            "price" => $this->price,
+            "is_valid" => $this->is_valid,
+            "sub" => $this->sub->format(),
         ];
     }
 }

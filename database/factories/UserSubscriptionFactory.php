@@ -20,6 +20,8 @@ class UserSubscriptionFactory extends Factory
             'price' => $this->faker->numberBetween(10_000, 100_000),
             'start_at' => $start_at,
             'end_at' => $this->faker->dateTimeBetween($start_at,'+12 months'),
+            "status" => "approved"
+
         ];
     }
 }

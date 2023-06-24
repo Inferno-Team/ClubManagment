@@ -13,6 +13,7 @@ class SubscriptionType extends Model
     protected $fillable = ['name'];
     // protected $appends = ['number_of_clubs', 'number_of_subs', 'last_year_subscriptions'];
 
+
     public function clubs()
     {
         return $this->belongsToMany(Club::class, 'club_subscriptions', 'subscription_id')
@@ -60,6 +61,9 @@ class SubscriptionType extends Model
             }
         );
     }
+    public function club_subscriptions(){
+        return $this->hasMany(ClubSubScription::class,'subscription_id');
+    }
     public function customer_subscriptions()
     {
         return $this->belongsToMany(UserSubscription::class, 'club_subscriptions', 'subscription_id', 'id', null, 'subscription_id')
@@ -89,15 +93,15 @@ class SubscriptionType extends Model
     public function getThisYearCustomersSubscriptions()
     {
         $filtered = $this->customer_subscriptions->filter(function ($val) {
-            $valYear = Carbon::parse($val->pivot->created_at)->format('Y');
+            $valYear = Carbon::parse($val->start_at)->format('Y');
             $extaptedYear = Carbon::now()->format('Y');
-            info($val->subscription_id);
             return $valYear == $extaptedYear;
             // return true;
         })->values();
 
+
         $records = $filtered->groupBy(function ($val) {
-            return Carbon::parse($val->pivot->created_at)->format('M');
+            return Carbon::parse($val->start_at)->format('M');
         });
         $revenueData = [
             "Jan" => 0,
@@ -125,14 +129,17 @@ class SubscriptionType extends Model
             'values' => array_values($revenueData)
         ];
     }
+
     public function singleSubscriptionFormat()
     {
 
         return (object)[
             'id' => $this->id,
             'name' => $this->name,
-            'last_year_subscriptions' => $this->customer_subscriptions,
             'last_year_subscriptions' => $this->getThisYearCustomersSubscriptions(),
+            "customers" => $this->customer_subscriptions->map->formatOnly(),
+            "number_of_customer_sub" => 150,
+            "number_of_last_month_subs" => 50,
 
         ];
     }

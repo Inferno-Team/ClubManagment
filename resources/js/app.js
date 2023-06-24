@@ -1,5 +1,5 @@
 require('./utils/bootstrap');
-
+require('../sass/app.scss');
 // import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
