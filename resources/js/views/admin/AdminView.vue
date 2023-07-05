@@ -61,7 +61,7 @@ export default {
 
             if (item.title === 'Create Club') {
                 this.$modal.show(CreateNewClubDialog)
-                    .then(this.club)
+                    .then(this.addNewClub)
                     .catch(error => { });
             } else if (item.title == 'Create New Subscription') {
                 this.$modal.show(CreateNewSubscription)

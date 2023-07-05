@@ -43,7 +43,8 @@ class Club extends Model
     }
     public function last_month_subs(): BelongsToMany
     {
-        return $this->belongsToMany(UserSubscription::class, 'club_subscriptions', 'club_id', 'id', null, 'subscription_id')
+        return $this->belongsToMany(UserSubscription::class,
+        'club_subscriptions', 'club_id', 'id', null, 'subscription_id')
             ->whereMonth(
                 'start_at',
                 '=',

@@ -29,12 +29,25 @@ class ClubSubScription extends Model
     {
         return $this->hasMany(UserSubscription::class, 'subscription_id');
     }
+    public function getCustomers()
+    {
+        return $this->user_subscriptions->map(function ($item) {
+            return (object)[
+                "id" => $item->id,
+                "customer" => $item->customer->formatUser(),
+                "start_at" => $item->start_at,
+                "end_at" => $item->end_at,
+                "price" => $item->price,
+                "is_valid" => $item->is_valid,
+            ];
+        });
+
+    }
     public function getThisYearCustomersSubscriptions()
     {
         $filtered = $this->user_subscriptions->filter(function ($val) {
             $valYear = Carbon::parse($val->start_at)->format('Y');
             $extaptedYear = Carbon::now()->format('Y');
-            info($val->subscription_id);
             return $valYear == $extaptedYear;
             // return true;
         })->values();
@@ -68,6 +81,16 @@ class ClubSubScription extends Model
             'values' => array_values($revenueData)
         ];
     }
+
+    public function formatForAdmin()
+    {
+        return (object)[
+            'id' => $this->id,
+            'price' => $this->price,
+            'user_subscriptions_count' => count($this->user_subscriptions),
+            "club" => $this->club->format(),
+        ];
+    }
     public function format()
     {
         return (object)[
@@ -75,6 +98,7 @@ class ClubSubScription extends Model
             'subscription' => $this->subscription->format(),
             'price' => $this->price,
             'user_subscriptions' => $this->getThisYearCustomersSubscriptions(),
+            'customers' => $this->getCustomers(),
             'user_subscriptions_count' => count($this->user_subscriptions),
         ];
     }

@@ -121,7 +121,7 @@ class ClubController extends Controller
         $club = $request->user()->club;
         $subs = UserSubscription::with('sub', 'customer')->get()->filter(function ($item) use ($club) {
             return $item->sub->club_id == $club->id;
-        })->map->format();
+        })->values()->map->format();
         return LocalResponse::returnData('subscriptions', $subs, 'found', 200);
     }
 }

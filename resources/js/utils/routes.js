@@ -8,9 +8,10 @@ import SingleSubscriptionPage from '../views/admin/SingleSubscriptionPage.vue'
 import SingleClubPage from '../views/admin/SingleClubPage.vue'
 
 import ManagerView from '../views/manager/ManagerView.vue'
-import ManagerClubPage from '../views/manager/ManagerClubPage'
+import ManagerClubPage from '../views/manager/ManagerClubPage.vue'
 import ManagerAllSubscriptions from '../views/manager/ManagerAllSubscriptions.vue'
 import SingleManagerSubscriptionPage from '../views/manager/SingleManagerSubscriptionPage.vue'
+import MyCustomers from '../views/manager/MyCustomers.vue';
 import {
     TYPES,
     CONSTANCES
@@ -119,7 +120,7 @@ export const routes = [
             {
                 path: '/manager/customers',
                 name: 'manager-customers-page',
-                component: EmptyPage
+                component: MyCustomers
             },
             {
                 path: '/manager/subscriptions/:id',
