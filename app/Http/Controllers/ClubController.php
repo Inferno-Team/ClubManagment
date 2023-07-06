@@ -108,6 +108,18 @@ class ClubController extends Controller
             return LocalResponse::returnMessage('Subscription Deleted successfully');
         } else return LocalResponse::returnMessage("this subscription doesn't belongs to your club.");
     }
+    public function approveCustomerSubscription(ApproveCustomerSubscriptionRequest $request)
+    {
+        // check if this request is on this manager customers
+        $manager = Auth::user();
+        $club = Club::where('manager_id', $manager->id)->first();
+        $userSubscription = UserSubscription::where('id', $request->id)->with('sub')->first();
+        if ($userSubscription->sub->club_id == $club->id) {
+            // we can approve this subscription now
+            $userSubscription->approve();
+            return LocalResponse::returnMessage('Subscription Approved successfully');
+        } else return LocalResponse::returnMessage("this subscription doesn't belongs to your club.");
+    }
 
     public function getAllSubscriptions(Request $request)
     {
@@ -144,5 +156,14 @@ class ClubController extends Controller
         $sub->approved = $request->approve;
         $sub->update();
         return LocalResponse::returnMessage("subscription has been " . $sub->approved);
+    }
+    public function getAllManagerRequests()
+    {
+        $manager = Auth::user();
+        $club = Club::where('manager_id', $manager->id)->first();
+        $customerRequests = UserSubscription::where('status', 'pending')->whereHas("sub", function ($sub) use ($club) {
+            $sub->where('club_id', $club->id);
+        })->get()->map->formatOnly();
+        return LocalResponse::returnData("requests", $customerRequests);
     }
 }

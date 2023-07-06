@@ -84,8 +84,8 @@ export default {
         addNewSubscription({ sub, price }) {
             this.addNewClubStatus = true;
             axios.post('/subscription/api/make-club-subscription', {
-                subscription_id:sub,
-                price:price
+                subscription_id: sub,
+                price: price
             })
                 .then((response) => {
                     this.addNewClubStatus = false;

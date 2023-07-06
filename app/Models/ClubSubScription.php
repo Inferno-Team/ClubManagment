@@ -42,6 +42,19 @@ class ClubSubScription extends Model
             ];
         });
     }
+    // public function getCustomers()
+    // {
+    //     return $this->user_subscriptions->map(function ($item) {
+    //         return (object)[
+    //             "id" => $item->id,
+    //             "customer" => $item->customer->formatUser(),
+    //             "start_at" => $item->start_at,
+    //             "end_at" => $item->end_at,
+    //             "price" => $item->price,
+    //             "is_valid" => $item->is_valid,
+    //         ];
+    //     });
+    // }
     public function getThisYearCustomersSubscriptions()
     {
         $filtered = $this->user_subscriptions->filter(function ($val) {
@@ -104,14 +117,21 @@ class ClubSubScription extends Model
     }
     public function format()
     {
+        $this_month_sub = $this->user_subscriptions()->whereMonth(
+            'start_at',
+            '=',
+            Carbon::now()->month
+        )->whereYear("start_at", "=", Carbon::now()->year)->get();
         return (object)[
             'id' => $this->id,
             'subscription' => $this->subscription->format(),
             'price' => $this->price,
             'user_subscriptions' => $this->getThisYearCustomersSubscriptions(),
             'customers' => $this->getCustomers(),
+            'customers' => $this->getCustomers(),
             'user_subscriptions_count' => count($this->user_subscriptions),
-            'this_month_subs' => $this->getThisMonthSubscriptionCount()
+            'this_month_subs' => $this->getThisMonthSubscriptionCount(),
+            "user_subscriptions_count_this_month" => count($this_month_sub)
         ];
     }
 }
