@@ -8,16 +8,15 @@ import SingleSubscriptionPage from "../views/admin/SingleSubscriptionPage.vue";
 import SingleClubPage from "../views/admin/SingleClubPage.vue";
 
 import ManagerView from "../views/manager/ManagerView.vue";
-import ManagerClubPage from "../views/manager/ManagerClubPage.vue.vue";
+import ManagerClubPage from "../views/manager/ManagerClubPage.vue";
 import ManagerAllSubscriptions from "../views/manager/ManagerAllSubscriptions.vue";
 import SingleManagerSubscriptionPage from "../views/manager/SingleManagerSubscriptionPage.vue";
-import MyCustomers from '../views/manager/MyCustomers.vue';
-import ShowAllCustomersRequests from '../views/manager/ShowAllCustomersRequests.vue';
 import MyCustomers from "../views/manager/MyCustomers.vue";
-import ShowAllCustomersRequests from '../views/manager/ShowAllCustomersRequests.vue'
+import ShowAllCustomersRequests from "../views/manager/ShowAllCustomersRequests.vue";
 import { TYPES, CONSTANCES } from "./utils";
 
 import TrainerPage from "../views/trainer/TrainerPage.vue";
+import TrainerHomePage from "../views/trainer/TrainerHomePage.vue";
 const gaurd = function (to, from, next) {
     axios
         .get("/api/user")
@@ -158,7 +157,7 @@ export const routes = [
             {
                 path: "/",
                 name: "trainer-page",
-                component: EmptyPage,
+                component: TrainerHomePage,
             },
         ],
     },

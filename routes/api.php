@@ -43,7 +43,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::group(['middleware' => ['is_manager']], function () {
         Route::get('just-name', [SubscriptionController::class, 'showJustNameSubscription'])->prefix('subscription');
-        Route::get('just-name', [SubscriptionController::class, 'showJustNameSubscription'])->prefix('subscription');
         Route::post('update', [ClubController::class, 'updateClub'])->prefix('club');
         Route::get('my-club', [ClubController::class, 'myClub'])->prefix('club');
         Route::get('my-single-club-subscription/{id}', [ClubController::class, 'mySingleClubSubscription'])->prefix('club');
@@ -65,6 +64,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
     Route::group(['middleware' => ['is_trainer']], function () {
         Route::post('/add-table', [TrainerController::class, 'addTable'])->prefix('trainer');
+        Route::get('/get-all-table', [TrainerController::class, 'getAllTables'])->prefix('trainer');
+        Route::post('/delete-table', [TrainerController::class, 'deleteTable'])->prefix('trainer');
     });
 });
 
