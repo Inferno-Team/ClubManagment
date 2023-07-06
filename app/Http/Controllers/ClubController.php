@@ -8,6 +8,7 @@ use App\Http\Requests\clubs\DeleteClubSubscrpitionRequest;
 use App\Http\Requests\Clubs\EditClubManager;
 use App\Http\Requests\clubs\MakeClubSubscrpitionRequest;
 use App\Http\Requests\Clubs\UpdateClubRequest;
+use App\Http\Requests\manager\ApproveCustomerSubscriptionRequest;
 use App\Http\Requests\manager\DeleteCustomerSubscriptionRequest;
 use App\Models\Club;
 use Illuminate\Http\Request;
@@ -68,8 +69,9 @@ class ClubController extends Controller
         return LocalResponse::returnData('club', $club, 'found', isset($club) ? 200 : 401);
     }
 
-    public function mySingleClubSubscription(int $id){
-        $clubSubscription = ClubSubScription::where('id',$id)->first()->format();
+    public function mySingleClubSubscription(int $id)
+    {
+        $clubSubscription = ClubSubScription::where('id', $id)->first()->format();
         return LocalResponse::returnData('sub', $clubSubscription, 'found', isset($clubSubscription) ? 200 : 401);
     }
     public function showClub(int $id)
@@ -123,5 +125,24 @@ class ClubController extends Controller
             return $item->sub->club_id == $club->id;
         })->values()->map->format();
         return LocalResponse::returnData('subscriptions', $subs, 'found', 200);
+    }
+    public function getAllJoiningRequests()
+    {
+        $manager = Auth::user();
+        $club = $manager->club;
+        $user_sub = UserSubscription::whereHas(
+            'sub',
+            fn ($query) => $query->where('club_id', $club->id)
+        )->where('approved', 'waiting')->with('customer')->get();
+        return LocalResponse::returnData('requests', $user_sub);
+    }
+    public function approveCustomerSub(ApproveCustomerSubscriptionRequest $request)
+    {
+        $sub = UserSubscription::where('id', $request->id)->first();
+        if ($sub->approved !== 'waiting')
+            return LocalResponse::returnMessage("can't approve this request, Already handled.");
+        $sub->approved = $request->approve;
+        $sub->update();
+        return LocalResponse::returnMessage("subscription has been " . $sub->approved);
     }
 }

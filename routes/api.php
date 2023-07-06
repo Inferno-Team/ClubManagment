@@ -4,6 +4,7 @@ use App\Http\Controllers\ClubController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TrainerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Traits\LocalResponse;
@@ -51,6 +52,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('get-all-user-subscriptions', [ClubController::class, 'getAllUsersSubscriptions'])
             ->prefix('subscription');
         Route::post('delete-customer-subscription', [ClubController::class, 'deleteCustomerSubscription'])->prefix('subscription');
+        Route::get('get-all-manager-requests', [ClubController::class, 'getAllJoiningRequests']);
+        Route::post('approve-customer-subscription', [ClubController::class, 'approveCustomerSub'])->prefix('subscription');
     });
 
     Route::group(['middleware' => ['is_customer']], function () {
@@ -59,7 +62,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['not_customer']], function () {
         Route::get('show/{id}', [SubscriptionController::class, 'showSingleSubscription'])->prefix('subscription');
     });
-
+    Route::group(['middleware' => ['is_trainer']], function () {
+        Route::post('/add-table', [TrainerController::class, 'addTable'])->prefix('trainer');
+    });
 });
 
 

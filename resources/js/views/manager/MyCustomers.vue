@@ -58,6 +58,9 @@ export default {
             remove_subscription: {
                 customer: {}
             },
+            emptySubscription: {
+                customer: {}
+            },
         };
     },
     methods: {

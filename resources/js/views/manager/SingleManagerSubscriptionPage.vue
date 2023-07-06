@@ -87,6 +87,29 @@ export default {
             },
             display: false,
         },
+        customersCountChart: {
+            type: "bar",
+            data: {
+                labels: ['All Customers', 'Customers Of this month'],
+                datasets: [
+                    {
+                        label: "Count of all customers",
+                        data: [],
+                        backgroundColor: [
+                            "rgba(255, 99, 132, 0.2)",
+                            "rgba(54, 162, 235, 0.2)",
+
+                        ],
+                        borderColor: [
+                            "rgba(255, 99, 132, 1)",
+                            "rgba(54, 162, 235, 1)",
+                        ],
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            display: false,
+        },
         searchCustomer: null,
         paginatedCustomers: [],
         customers: [],
@@ -108,6 +131,10 @@ export default {
                     this.sub = data.sub;
                     this.customers = this.sub.customers;
                     this.createSubscriptionChart();
+                    this.createCustomerChart(
+                        this.sub.user_subscriptions_count,
+                        this.sub.this_month_subs,
+                    );
                 }
             })
             .catch((error) => {
@@ -163,6 +190,11 @@ export default {
         handleError(error) {
             this.$toast.error("Error please try again later.");
             console.error(error);
+        },
+        createCustomerChart(all, month) {
+            this.customersCountChart.data.datasets[0].data = [all, month];
+            const ctx = document.getElementById("customer-count-chart");
+            new Chart(ctx, this.customersCountChart);
         }
     }
 }

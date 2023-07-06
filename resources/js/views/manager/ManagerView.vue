@@ -61,8 +61,9 @@ export default {
                 href: '/manager/customers',
                 child: [
                     {
-                        title: 'Add New Subscription',
-                        icon: 'fa fa-plus-square-o'
+                        title: 'Joining Requests',
+                        icon: 'fa fa-plus-square-o',
+                        href: '/manager/requests',
                     }
                 ]
             },

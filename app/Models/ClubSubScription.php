@@ -41,7 +41,6 @@ class ClubSubScription extends Model
                 "is_valid" => $item->is_valid,
             ];
         });
-
     }
     public function getThisYearCustomersSubscriptions()
     {
@@ -81,6 +80,18 @@ class ClubSubScription extends Model
             'values' => array_values($revenueData)
         ];
     }
+    public function getThisMonthSubscriptionCount()
+    {
+        $filtered = $this->user_subscriptions->filter(function ($val) {
+            $valYear = Carbon::parse($val->start_at)->format('Y');
+            $valMonth = Carbon::parse($val->start_at)->format('m');
+            $extaptedYear = Carbon::now()->format('Y');
+            $extaptedMonth = Carbon::now()->format('m');
+            return $valYear == $extaptedYear && $valMonth == $extaptedMonth;
+            // return true;
+        })->values();
+        return count($filtered);
+    }
 
     public function formatForAdmin()
     {
@@ -100,6 +111,7 @@ class ClubSubScription extends Model
             'user_subscriptions' => $this->getThisYearCustomersSubscriptions(),
             'customers' => $this->getCustomers(),
             'user_subscriptions_count' => count($this->user_subscriptions),
+            'this_month_subs' => $this->getThisMonthSubscriptionCount()
         ];
     }
 }

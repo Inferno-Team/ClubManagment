@@ -19,6 +19,10 @@ export default {
                 case TYPES.MANAGER:
                     this.$router.push({ name: 'manager-page' });
                     break;
+                case TYPES.TRAINER:
+                    this.$router.push({ name: 'trainer-page' });
+                    break;
+
                 default:
                     this.$router.push({ name: '404-page' })
                     break;

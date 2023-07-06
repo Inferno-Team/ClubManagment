@@ -18,12 +18,14 @@ class UserSubscription extends Model
         'start_at',
         'price',
         'end_at',
+        'approved'
     ];
 
     public function isValid(): Attribute
     {
         return new Attribute(
-            get: fn () => Carbon::now()->between($this->start_at, $this->end_at),
+            get: fn () => $this->approved == 'yes' &&
+                Carbon::now()->between($this->start_at, $this->end_at),
         );
     }
     public function customer(): BelongsTo
@@ -43,7 +45,8 @@ class UserSubscription extends Model
             'is_valid' => $this->is_valid,
             "price" => $this->price,
             'end_at' => $this->end_at,
-            'start_at' => $this->start_at
+            'start_at' => $this->start_at,
+            'approved' => $this->approved
         ];
     }
     public function formatOnly()
@@ -55,6 +58,7 @@ class UserSubscription extends Model
             'end_at' => $this->end_at,
             'start_at' => $this->start_at,
             "price" => $this->price,
+            'approved' => $this->approved
         ];
     }
     public function formatWithoutSubscriotionRelation()
@@ -66,6 +70,7 @@ class UserSubscription extends Model
             "end_at" => $this->end_at,
             "price" => $this->price,
             "is_valid" => $this->is_valid,
+            'approved' => $this->approved,
             "sub" => $this->sub->format(),
         ];
     }
