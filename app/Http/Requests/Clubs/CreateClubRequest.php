@@ -34,6 +34,7 @@ class CreateClubRequest extends FormRequest
             'location' => 'required|max:255',
             'lat' => 'required|max:90',
             'lng' => 'required|max:90',
+            'image' => 'file',
             'manager' => 'required',
             'manager.name' => 'required',
             'manager.password' => 'required',

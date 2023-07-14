@@ -19,9 +19,26 @@ class Club extends Model
         'location',
         'lat',
         'lng',
+        'image',
         'manager_id'
     ];
+
     // protected $appends = ['number_of_subs', 'number_of_last_month_subs', 'number_of_customer_sub', 'revenue'];
+
+    public function image(): Attribute
+    {
+        return new Attribute(
+            get: function () {
+                $orgin = '4.jpg';
+                if (empty($this->getRawOriginal('image')))
+                    $orgin = $this->getRawOriginal('image');
+                $http = request()->getSchemeAndHttpHost();
+                $path = '/images/' . $orgin;
+                return $http . $path;
+            }
+        );
+    }
+
     public function manager(): BelongsTo
     {
         return $this->belongsTo(User::class, 'manager_id');
@@ -116,6 +133,7 @@ class Club extends Model
             'name' => $this->name,
             'location' => $this->location,
             'pos' => [$this->lat, $this->lng],
+            'image' => $this->image,
             'manager' => $this->manager->formatUser(),
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\FileHelper;
 use App\Http\Requests\Clubs\CreateClubRequest;
 use App\Http\Requests\Clubs\DeleteClubRequest;
 use App\Http\Requests\clubs\DeleteClubSubscrpitionRequest;
@@ -24,6 +25,8 @@ class ClubController extends Controller
     {
         $manager = User::create($request->getManager());
         $club = Club::create($request->values($manager->id));
+        $club->image = FileHelper::uploadFileOnPublic($request->file('image'));
+        $club->update();
         // $club = Club::find($club->id)->with('manager');
         $club->manager = $manager;
         return LocalResponse::returnData('club', $club, 'created successfully.', 201);
