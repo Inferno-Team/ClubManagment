@@ -30,7 +30,7 @@ class Club extends Model
         return new Attribute(
             get: function () {
                 $orgin = '4.jpg';
-                if (empty($this->getRawOriginal('image')))
+                if (!empty($this->getRawOriginal('image')))
                     $orgin = $this->getRawOriginal('image');
                 $http = request()->getSchemeAndHttpHost();
                 $path = '/images/' . $orgin;
