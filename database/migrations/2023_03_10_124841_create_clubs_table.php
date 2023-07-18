@@ -19,7 +19,7 @@ class CreateClubsTable extends Migration
             $table->string('location');
             $table->double('lat')->default(0.0);
             $table->double('lng')->default(0.0);
-            $table->double('image')->nullable()->default(null);
+            $table->string('image')->nullable()->default(null);
             $table->foreignId('manager_id')->references('id')
                 ->on('users')->cascadeOnDelete();
             $table->unique('manager_id');
