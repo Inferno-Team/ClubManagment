@@ -20,3 +20,4 @@ class ClubSubScriptionFactory extends Factory
         ];
     }
 }
+//36.208323, 37.115098

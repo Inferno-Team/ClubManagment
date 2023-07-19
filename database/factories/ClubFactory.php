@@ -19,7 +19,7 @@ class ClubFactory extends Factory
             'lat' => $this->faker->latitude(),
             'lng' => $this->faker->longitude(),
             'manager_id' => 1,
-            'image' => '4.png',
+            'image' => '4.jpg',
         ];
     }
 }

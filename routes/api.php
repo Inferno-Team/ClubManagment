@@ -20,9 +20,9 @@ Route::get('error403', function () {
 
 Route::post('/register', [UserController::class, 'register']);
 
-Route::get('clubs', [ClubController::class, 'showAllClub'])->prefix('club');
-Route::group(['middleware' => ['auth:sanctum']], function () {
 
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('clubs', [ClubController::class, 'showAllClub'])->prefix('club');
     Route::group(['middleware' => ['is_admin']], function () {
         // Club ( CRUD )
 
@@ -59,6 +59,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::group(['middleware' => ['is_customer']], function () {
         Route::post('subscribe-to-club', [CustomerController::class, 'subscribeToClub'])->prefix('customer');
+        Route::get('/get-all-table', [CustomerController::class, 'getAllTables'])->prefix('customer');
+        Route::get('/subscribe-to-diet', [TrainerController::class, 'subscribeTotable'])->prefix('customer');
+
     });
     Route::group(['middleware' => ['not_customer']], function () {
         Route::get('show/{id}', [SubscriptionController::class, 'showSingleSubscription'])->prefix('subscription');

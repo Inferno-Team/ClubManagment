@@ -32,4 +32,5 @@ class TrainerController extends Controller
         $table->delete();
         return LocalResponse::returnMessage("Eat Table deleted successfully.");
     }
+
 }
