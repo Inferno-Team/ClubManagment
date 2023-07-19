@@ -25,7 +25,7 @@ class CustomerController extends Controller
     }
     public function getAllTables()
     {
-        $tables = EatTable::get()->map->format();
+        $tables = EatTable::get()->map->formatForCustomers();
         return LocalResponse::returnData('tables', $tables);
     }
     public function subscribeToTable(SubscribeToDietRequest $request)
