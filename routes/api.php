@@ -60,7 +60,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['is_customer']], function () {
         Route::post('subscribe-to-club', [CustomerController::class, 'subscribeToClub'])->prefix('customer');
         Route::get('/get-all-table', [CustomerController::class, 'getAllTables'])->prefix('customer');
-        Route::post('/subscribe-to-diet', [TrainerController::class, 'subscribeTotable'])->prefix('customer');
+        Route::post('/subscribe-to-diet', [CustomerController::class, 'subscribeToTable'])->prefix('customer');
 
     });
     Route::group(['middleware' => ['not_customer']], function () {

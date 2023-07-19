@@ -28,7 +28,7 @@ class CustomerController extends Controller
         $tables = EatTable::get()->map->format();
         return LocalResponse::returnData('tables', $tables);
     }
-    public function subscribeTotable(SubscribeToDietRequest $request)
+    public function subscribeToTable(SubscribeToDietRequest $request)
     {
         $user = Auth::user();
         $user_diet = UserEatTable::create([
