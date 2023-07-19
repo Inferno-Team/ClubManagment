@@ -23,6 +23,15 @@
                     <md-input name="password" id="password" autocomplete="off" v-model="form.password" :disabled="sending"
                         type="password" />
                 </md-field>
+                <div class="mx-auto drop_down_menu_opener">
+                    <md-menu md-direction="bottom-start">
+                        <md-button md-menu-trigger>{{ selected_club.name }}</md-button>
+                        <md-menu-content>
+                            <md-menu-item @click="onClubSelected(club)" v-for="(club, index) in clubs" :key="index">{{
+                                club.name }}</md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
                 <md-button type="submit" class="md-primary md-raised">Register</md-button>
 
             </form>
@@ -49,11 +58,13 @@ export default {
             email: null,
             phone: null,
             password: null,
-            type:'trainer'
+            type: 'trainer',
+            club_id: -1
 
         },
         sending: false,
         keepLoggedIn: false,
+        clubs: [],
         errors: {
             email: [],
             password: []
@@ -61,11 +72,19 @@ export default {
         dialogStates: {
             password: false,
             email: false,
+        },
+        selected_club: {
+            name: "Select Club",
+            id: -1
         }
     }),
 
     methods: {
         validateUser() {
+            if (this.form.club_id == -1) {
+                this.$toast.warning("Please Select Gym Before Register.");
+                return;
+            }
             //send post request to api
             axios.post('/api/register', this.form)
                 .then((response) => {
@@ -94,7 +113,25 @@ export default {
         },
         goToRegister() {
             this.$router.push({ name: 'register-page' });
+        },
+        onClubSelected(club) {
+            this.selected_club = {
+                name: club.name,
+                id: club.id
+            }
+            this.form.club_id = this.selected_club.id;
         }
+    },
+    mounted() {
+        axios.get('/club/api/clubs')
+            .then((res) => {
+                let data = res.data;
+                this.clubs = data.clubs;
+            })
+            .catch((error) => {
+                console.log(error);
+                // this.$toast.error(error);
+            });
     }
 }
 </script>
@@ -151,6 +188,14 @@ export default {
 
 .md-checkbox {
     margin-left: 5.2rem;
+}
+
+.drop_down_menu_opener {
+
+    max-width: fit-content;
+    border-bottom: 1px solid gray;
+    margin-bottom: 8px;
+
 }
 
 @media screen and (max-width: 768px) {

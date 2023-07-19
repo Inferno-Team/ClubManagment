@@ -6,7 +6,7 @@
 
             <md-table-toolbar>
                 <div class="md-toolbar-section-start">
-                    <h1 class="md-title">Clubs</h1>
+                    <h1 class="md-title">Diets</h1>
                 </div>
 
                 <md-field md-clearable class="md-toolbar-section-end">
@@ -14,9 +14,9 @@
                 </md-field>
             </md-table-toolbar>
 
-            <md-table-empty-state md-label="No clubs found"
-                :md-description="`No club found quere. Try a different search term or create a new club.`">
-                <md-button class="md-primary md-raised" @click="showAddNewClubModal">Create New Club</md-button>
+            <md-table-empty-state md-label="No diets found"
+                :md-description="`No diet found quere. Try a different search term or create a new diet.`">
+                <md-button class="md-primary md-raised" @click="showAddNewClubModal">Create New Diet</md-button>
             </md-table-empty-state>
             <md-table-row slot="md-table-row" slot-scope="{ item }">
                 <md-table-cell md-label="ID" md-numeric>{{ item.id }}</md-table-cell>
@@ -42,14 +42,13 @@
             <!-- <md-table-pagination :md-page-size="2" :md-page-options="[1, 2, 3, 4, 5, 6]" :md-update="updatePagination"
                 :md-data="users" :md-paginated-data.sync="paginatedClubs" /> -->
         </md-table>
-        <md-dialog-confirm :md-active.sync="remove_club_dialog_active" md-title="Removing Club"
+        <md-dialog-confirm :md-active.sync="remove_club_dialog_active" md-title="Removing Diet"
             :md-content="`Do you really want to remove <strong>${remove_club.name}</strong> ?`" md-confirm-text="Yes"
             md-cancel-text="No" @md-cancel="() => remove_club = {}" @md-confirm="onClubRemoveConfirm" />
     </div>
 </template>
 
 <script>
-import ClubsTableItem from '../../components/ClubsTableItem.vue';
 const toLower = text => {
     return text.toString().toLowerCase()
 }
@@ -61,11 +60,10 @@ const searchByName = (items, term) => {
 
     return items
 }
-import CreateNewClubDialog from '../../components/dialogs/CreateNewClubDialog.vue'
+import CreateNewEatingTableDialog from '../../components/dialogs/CreateNewEatingTableDialog.vue'
 import EditClubDialog from '../../components/dialogs/EditClubDialog.vue'
 
 export default {
-    components: { ClubsTableItem },
     mounted() {
         this.getAllClubs();
 
@@ -105,21 +103,20 @@ export default {
             this.searched = searchByName(this.clubs, this.search)
         },
         showAddNewClubModal() {
-            this.$modal.show(CreateNewClubDialog)
-                .then(this.addNewClub)
+            this.$modal.show(CreateNewEatingTableDialog)
+                .then(this.createNewEatingTable)
                 .catch(error => { });
         },
-        addNewClub(club) {
+        createNewEatingTable(table) {
             this.addNewClubStatus = true;
-            axios.post('/club/api/create_club', club)
+            axios.post('/trainer/api/add-table', table)
                 .then((response) => {
                     this.addNewClubStatus = false;
                     let data = response.data;
                     if (data.code == 200 || data.code == 201)
                         this.$toast.success(data.msg);
                     else
-                        this.$toast.error(data.msg);
-                    // re send get request to get all clubs
+                        this.$toast.warning(data.msg);
                     this.getAllClubs();
                 })
                 .catch((error) => {

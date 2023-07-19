@@ -19,10 +19,10 @@ Route::get('error403', function () {
 })->name('login');
 
 Route::post('/register', [UserController::class, 'register']);
+Route::get('clubs', [ClubController::class, 'showAllClub'])->prefix('club');
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('clubs', [ClubController::class, 'showAllClub'])->prefix('club');
     Route::group(['middleware' => ['is_admin']], function () {
         // Club ( CRUD )
 

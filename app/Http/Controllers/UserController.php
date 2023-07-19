@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Traits\LocalResponse;
+use App\Models\ClubTrainer;
 
 class UserController extends Controller
 {
@@ -40,6 +41,12 @@ class UserController extends Controller
         ]);
         $user->password = Hash::make($request->password);
         $user->update();
+        if ($user->type == 'trainer') {
+            ClubTrainer::create([
+                'club_id' => $request->club_id,
+                'trainer_id' => $user->id
+            ]);
+        }
         $token = $user->createToken('authToken')->plainTextToken;
         return LocalResponse::returnData("login", [
             'token' => $token,
