@@ -84,7 +84,7 @@ export default {
     methods: {
         getAllClubs() {
             this.isLoading = true;
-            axios.get('/trainer/api/get-all-table')
+            axios.get('/trainer/api/get-my-tables')
                 .then((response) => {
                     let data = response.data;
                     if (data.code == 200) {
