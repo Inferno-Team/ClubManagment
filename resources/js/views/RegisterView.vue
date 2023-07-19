@@ -3,21 +3,27 @@
         <div class="login-container">
             <h2 class="mx-auto top-login-text mb-2">Login</h2>
             <form novalidate @submit.prevent="validateUser">
-
+                <md-field class="mx-auto" id="email-container">
+                    <label for="name">Name</label>
+                    <md-input name="name" id="name" type="text" autocomplete="off" v-model="form.name"
+                        :disabled="sending" />
+                </md-field>
                 <md-field class="mx-auto" id="email-container">
                     <label for="email">Email</label>
                     <md-input name="email" id="email" type="email" autocomplete="off" v-model="form.email"
                         :disabled="sending" />
                 </md-field>
-
+                <md-field class="mx-auto" id="email-container">
+                    <label for="phone">Phone (Optional)</label>
+                    <md-input name="phone" id="phone" type="phone" autocomplete="off" v-model="form.phone"
+                        :disabled="sending" />
+                </md-field>
                 <md-field class="mx-auto">
                     <label for="password">Password</label>
                     <md-input name="password" id="password" autocomplete="off" v-model="form.password" :disabled="sending"
                         type="password" />
                 </md-field>
-                <md-button type="submit" class="md-primary md-raised">Login</md-button>
-                <md-button type="submit" class="md-accent md-raised md-raised-2" @click.prevent="goToRegister">Create
-                    Account</md-button>
+                <md-button type="submit" class="md-primary md-raised">Register</md-button>
 
             </form>
 
@@ -39,8 +45,12 @@ export default {
 
     data: () => ({
         form: {
+            name: null,
             email: null,
-            password: null
+            phone: null,
+            password: null,
+            type:'trainer'
+
         },
         sending: false,
         keepLoggedIn: false,
@@ -57,7 +67,7 @@ export default {
     methods: {
         validateUser() {
             //send post request to api
-            axios.post('/api/login', this.form)
+            axios.post('/api/register', this.form)
                 .then((response) => {
                     let data = response.data;
                     if (data.code == 200) {
@@ -163,4 +173,5 @@ export default {
     .top-login-text {
         margin-top: 4rem;
     }
-}</style>
+}
+</style>

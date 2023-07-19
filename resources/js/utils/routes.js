@@ -1,4 +1,5 @@
 import LoginView from "../views/LoginView.vue";
+import RegisterView from "../views/RegisterView.vue";
 import HomeView from "../views/HomeView.vue";
 import EmptyPage from "../layouts/EmptyPage.vue";
 import AdminView from "../views/admin/AdminView.vue";
@@ -84,6 +85,12 @@ export const routes = [
         path: "/login",
         name: "login",
         component: LoginView,
+        beforeEnter: loginGuard,
+    },
+    {
+        path: "/register",
+        name: "register-page",
+        component: RegisterView,
         beforeEnter: loginGuard,
     },
 

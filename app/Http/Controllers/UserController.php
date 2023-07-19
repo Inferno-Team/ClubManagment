@@ -24,18 +24,26 @@ class UserController extends Controller
         return LocalResponse::returnData("login", [
             'token' => $token,
             'user' => $user
-        ], "Logged in succesffully.",200);
+        ], "Logged in succesffully.", 200);
     }
 
     public function register(RegisterRequest $request)
     {
-        $user = User::create($request->all());
+        $user = User::create([
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'name' => $request->name,
+            'password' => $request->password,
+            'type' => $request->type ?? 'customer',
+            'age' => $request->age ?? null,
+            'avatar' => $request->avatar ?? '',
+        ]);
         $user->password = Hash::make($request->password);
-        $user->save();
+        $user->update();
         $token = $user->createToken('authToken')->plainTextToken;
         return LocalResponse::returnData("login", [
             'token' => $token,
             'user' => $user
-        ]);
+        ], "Account Creared Successfully.");
     }
 }
