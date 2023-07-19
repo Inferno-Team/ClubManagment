@@ -31,6 +31,10 @@ class CustomerController extends Controller
     public function subscribeToTable(SubscribeToDietRequest $request)
     {
         $user = Auth::user();
+        $old_user_diet = UserEatTable::where('user_id', $user->id)
+            ->where('table_id', $request->id)->first();
+        if (!empty($old_user_diet))
+            return LocalResponse::returnMessage("You are already subscribe to to this diet.");
         $user_diet = UserEatTable::create([
             'user_id' => $user->id,
             'table_id' => $request->id,
