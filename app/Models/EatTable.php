@@ -56,6 +56,7 @@ class EatTable extends Model
             "items_count" => count($this->items),
             'customer_count' => count($this->customers_relation),
             'gym' =>  $gym->name,
+            'tainer_name' => $this->trainer->name,
             'background' => FileHelper::generateBackground(),
         ];
     }
