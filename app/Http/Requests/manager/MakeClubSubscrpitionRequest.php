@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\clubs;
+namespace App\Http\Requests\manager;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;

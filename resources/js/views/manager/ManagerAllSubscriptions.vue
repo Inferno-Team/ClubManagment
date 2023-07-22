@@ -152,7 +152,7 @@ export default {
             })
         },
         onSubRemoveConfirm() {
-            axios.post('/subscription/api/delete', {
+            axios.post('/subscription/api/delete-club-subscription', {
                 id: this.remove_sub.id,
             })
                 .then((res) => {

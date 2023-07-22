@@ -7,7 +7,7 @@ use App\Http\Requests\Clubs\CreateClubRequest;
 use App\Http\Requests\Clubs\DeleteClubRequest;
 use App\Http\Requests\clubs\DeleteClubSubscrpitionRequest;
 use App\Http\Requests\Clubs\EditClubManager;
-use App\Http\Requests\clubs\MakeClubSubscrpitionRequest;
+use App\Http\Requests\manager\MakeClubSubscrpitionRequest;
 use App\Http\Requests\Clubs\UpdateClubRequest;
 use App\Http\Requests\manager\ApproveCustomerSubscriptionRequest;
 use App\Http\Requests\manager\DeleteCustomerSubscriptionRequest;
