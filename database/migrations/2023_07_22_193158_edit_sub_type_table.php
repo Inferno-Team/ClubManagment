@@ -31,7 +31,7 @@ class EditSubTypeTable extends Migration
         ]);
         DB::table('subscription_types')->insert([
             'name' => 'Yearly',
-            'name' => '360',
+            'duration' => '360',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
