@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\customer\CheckIfSubscribedRequest;
 use App\Http\Requests\customer\SubscribeToDietRequest;
 use App\Http\Requests\CustomerSubscribeRequest;
 use App\Models\UserSubscription;
 use Illuminate\Http\Request;
 use App\Http\Traits\LocalResponse;
+use App\Models\Club;
 use App\Models\EatTable;
 use App\Models\UserEatTable;
 use Illuminate\Support\Facades\Auth;
@@ -40,5 +42,15 @@ class CustomerController extends Controller
             'table_id' => $request->id,
         ]);
         return LocalResponse::returnData("user_diet", $user_diet, 'Created Successfully');
+    }
+    public function checkIfSubscribed(CheckIfSubscribedRequest $request)
+    {
+        $club = Club::where('id', $request->club_id)->first();
+        $customer = Auth::user();
+        $customer_club = UserSubscription::where('customer_id', $customer->id)
+            ->whereHas('sub', function ($sub) use ($club) {
+                $sub->where('club_id', $club->id);
+            })->get();
+        return LocalResponse::returnData('subscribed', !empty($customer_club));
     }
 }
