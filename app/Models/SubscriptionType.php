@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class SubscriptionType extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name','duration'];
     // protected $appends = ['number_of_clubs', 'number_of_subs', 'last_year_subscriptions'];
 
 
@@ -148,6 +148,7 @@ class SubscriptionType extends Model
         return (object)[
             'id' => $this->id,
             'name' => $this->name,
+            'duration' => $this->duration,
         ];
     }
 }

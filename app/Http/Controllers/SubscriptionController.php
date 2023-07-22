@@ -16,6 +16,7 @@ class SubscriptionController extends Controller
     {
         $subscription = SubscriptionType::create([
             'name' => $request->name,
+            'duration' => $request->duration,
         ]);
         return LocalResponse::returnData("sub", $subscription, "created successfully");
     }

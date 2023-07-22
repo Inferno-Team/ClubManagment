@@ -17,14 +17,9 @@ class CreateSubscriptionTypesTable extends Migration
         Schema::create('subscription_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('duration');
             $table->timestamps();
         });
-        DB::table('subscription_types')->insert([
-            'name' =>'Monthly',
-        ]);
-        DB::table('subscription_types')->insert([
-            'name' =>'Yearly',
-        ]);
 
     }
 

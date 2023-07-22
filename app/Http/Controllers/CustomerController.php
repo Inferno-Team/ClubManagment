@@ -18,11 +18,20 @@ class CustomerController extends Controller
 {
     public function subscribeToClub(CustomerSubscribeRequest $request)
     {
+        $sub = ClubSubScription::where('id', $request->sub_id)->with('subscription')->first();
+        $end_at = now();
+        if ($sub->subscription->name == 'Monthly')
+            $end_at = now()->addMonth();
+        else if ($sub->subscription->name == 'Weekly')
+            $end_at = now()->addWeek();
+        else if ($sub->subscription->name == 'Yearly')
+            $end_at = now()->addYear();
+
         $usc = UserSubscription::create([
             'customer_id' => $request->user()->id,
             'subscription_id' => $request->sub_id,
             "start_at" => now(),
-            "end_at" => now()->addDay(),
+            "end_at" => $end_at,
         ]);
         return LocalResponse::returnData("usc", $usc, 'Created Successfully');
     }

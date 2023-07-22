@@ -6,6 +6,10 @@
                 <label>Subscription Name</label>
                 <md-input @change="validate" type="text" v-model="sub.name" required />
             </md-field>
+            <md-field>
+                <label>Subscription Duration</label>
+                <md-input @change="validate" type="text" v-model="sub.duration" required />
+            </md-field>
         </md-dialog-content>
 
         <md-dialog-actions>
@@ -22,6 +26,7 @@ export default {
     data: () => ({
         sub: {
             name: "",
+            duration: ""
 
         },
         submitState: true
@@ -29,7 +34,7 @@ export default {
     methods: {
         validate() {
             // console.log(this.sub);
-            this.submitState = !(this.sub.name != '');
+            this.submitState = !(this.sub.name != '' && this.sub.duration != '');
 
         }
     }

@@ -29,6 +29,7 @@ class CreateSubscriptionRequest extends FormRequest
     {
         return [
             "name" => "required|max:255|unique:subscription_types,name",
+            "duration" => "required"
         ];
     }
     protected function failedValidation(Validator $validator)
