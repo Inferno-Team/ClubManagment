@@ -20,4 +20,17 @@ class FileHelper
         $file->move(public_path($filePath), $filename);
         return $filename;
     }
+    public static function generateBackground(): string
+    {
+        $http = request()->getSchemeAndHttpHost();
+        // backgrounds images
+        $backgrounds = [
+            '1.jpg',
+            '2.jpg',
+            '1.png',
+        ];
+        $rand = random_int(0, count($backgrounds) - 1);
+
+        return $http . '/images/backgrounds/' . $backgrounds[$rand];
+    }
 }

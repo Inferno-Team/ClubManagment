@@ -25,7 +25,8 @@ class ClubController extends Controller
     {
         $manager = User::create($request->getManager());
         $club = Club::create($request->values($manager->id));
-        $club->image = FileHelper::uploadFileOnPublic($request->file('image'));
+        if ($request->hasFile('image'))
+            $club->image = FileHelper::uploadFileOnPublic($request->file('image'));
         $club->update();
         // $club = Club::find($club->id)->with('manager');
         $club->manager = $manager;

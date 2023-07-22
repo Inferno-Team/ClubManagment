@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Helpers\FileHelper;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -54,7 +55,8 @@ class EatTable extends Model
             "name" => $this->name,
             "items_count" => count($this->items),
             'customer_count' => count($this->customers_relation),
-            'gym' =>  $gym->name
+            'gym' =>  $gym->name,
+            'background' => FileHelper::generateBackground(),
         ];
     }
 }
