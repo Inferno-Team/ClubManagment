@@ -17,7 +17,6 @@ class CreateSubscriptionTypesTable extends Migration
         Schema::create('subscription_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('duration');
             $table->timestamps();
         });
 
