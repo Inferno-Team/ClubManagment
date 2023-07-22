@@ -20,6 +20,7 @@ class CustomerController extends Controller
     {
         $sub = ClubSubScription::where('id', $request->sub_id)->with('subscription')->first();
         $end_at = now();
+
         if ($sub->subscription->name == 'Monthly')
             $end_at = now()->addMonth();
         else if ($sub->subscription->name == 'Weekly')
