@@ -51,6 +51,8 @@ class CustomerController extends Controller
             ->whereHas('sub', function ($sub) use ($club) {
                 $sub->where('club_id', $club->id);
             })->get();
-        return LocalResponse::returnData('subscribed', !empty($customer_club));
+        return LocalResponse::returnData('subscribed', (object)[
+            'value' => !empty($customer_club)
+        ]);
     }
 }
