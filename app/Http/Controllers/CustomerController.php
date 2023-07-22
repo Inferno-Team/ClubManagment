@@ -9,6 +9,7 @@ use App\Models\UserSubscription;
 use Illuminate\Http\Request;
 use App\Http\Traits\LocalResponse;
 use App\Models\Club;
+use App\Models\ClubSubScription;
 use App\Models\EatTable;
 use App\Models\UserEatTable;
 use Illuminate\Support\Facades\Auth;
@@ -54,5 +55,10 @@ class CustomerController extends Controller
         return LocalResponse::returnData('subscribed', (object)[
             'value' => !empty($customer_club)
         ]);
+    }
+    public function singleClubSubscription(Request $request)
+    {
+        $subs = ClubSubScription::where('club_id', $request->id)->get()->map->formatForCusotmer();
+        return LocalResponse::returnData('subs', $subs, 'found', !empty($subs) ? 200 : 401);
     }
 }

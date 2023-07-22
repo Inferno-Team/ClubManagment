@@ -134,4 +134,12 @@ class ClubSubScription extends Model
             "user_subscriptions_count_this_month" => count($this_month_sub)
         ];
     }
+    public function formatForCusotmer()
+    {
+        return (object)[
+            'id' => $this->id,
+            'subscription' => $this->subscription->format(),
+            'price' => $this->price,
+        ];
+    }
 }
