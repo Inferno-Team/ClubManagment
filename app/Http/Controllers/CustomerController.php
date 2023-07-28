@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\customer\CheckIfSubscribedDietRequest;
 use App\Http\Requests\customer\CheckIfSubscribedRequest;
 use App\Http\Requests\customer\SubscribeToDietRequest;
 use App\Http\Requests\CustomerSubscribeRequest;
@@ -63,6 +64,16 @@ class CustomerController extends Controller
             })->values();
         return LocalResponse::returnData('subscribed', (object)[
             'value' => count($customer_club) != 0
+        ]);
+    }
+    public function checkIfSubscribedDiet(CheckIfSubscribedDietRequest $request)
+    {
+        $table = EatTable::where('id', $request->club_id)->first();
+        $customer = Auth::user();
+        $customer_table = UserEatTable::where('user_id', $customer->id)
+            ->where('table_id', $table->id)->get();
+        return LocalResponse::returnData('subscribed', (object)[
+            'value' => count($customer_table) != 0
         ]);
     }
     public function singleClubSubscription(Request $request)
