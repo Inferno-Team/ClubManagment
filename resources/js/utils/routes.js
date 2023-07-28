@@ -18,6 +18,7 @@ import { TYPES, CONSTANCES } from "./utils";
 
 import TrainerPage from "../views/trainer/TrainerPage.vue";
 import TrainerHomePage from "../views/trainer/TrainerHomePage.vue";
+import IngredientPage from "../views/trainer/IngredientPage.vue";
 const gaurd = function (to, from, next) {
     axios
         .get("/api/user")
@@ -165,6 +166,12 @@ export const routes = [
                 path: "/",
                 name: "trainer-page",
                 component: TrainerHomePage,
+            },
+            {
+                path: "/trainer/ingredient/:id",
+                name: "ingredient-page",
+                component: IngredientPage,
+                props: true,
             },
         ],
     },

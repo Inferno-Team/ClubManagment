@@ -137,7 +137,7 @@ class ClubController extends Controller
     public function getAllUsersSubscriptions(Request $request)
     {
         $club = $request->user()->club;
-        $subs = UserSubscription::with('sub', 'customer')->get()->filter(function ($item) use ($club) {
+        $subs = UserSubscription::with('sub', 'customer')->latest()->get()->filter(function ($item) use ($club) {
             return $item->sub->club_id == $club->id;
         })->values()->map->format();
         return LocalResponse::returnData('subscriptions', $subs, 'found', 200);
@@ -149,7 +149,7 @@ class ClubController extends Controller
         $user_sub = UserSubscription::whereHas(
             'sub',
             fn ($query) => $query->where('club_id', $club->id)
-        )->where('approved', 'waiting')->with('customer')->get();
+        )->where('approved', 'waiting')->with('customer')->latest()->get();
         return LocalResponse::returnData('requests', $user_sub);
     }
     public function approveCustomerSub(ApproveCustomerSubscriptionRequest $request)

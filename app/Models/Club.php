@@ -9,7 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\returnSelf;
 
 class Club extends Model
 {
@@ -22,8 +25,9 @@ class Club extends Model
         'image',
         'manager_id'
     ];
-
     // protected $appends = ['number_of_subs', 'number_of_last_month_subs', 'number_of_customer_sub', 'revenue'];
+
+
 
     public function image(): Attribute
     {
@@ -38,6 +42,8 @@ class Club extends Model
             }
         );
     }
+
+
 
     public function manager(): BelongsTo
     {
@@ -164,4 +170,5 @@ class Club extends Model
             "customer_sub" => $this->customer_sub->map->formatWithoutSubscriotionRelation(),
         ];
     }
+
 }

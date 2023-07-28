@@ -27,10 +27,10 @@ class FileHelper
         $backgrounds = [
             '1.jpg',
             '2.jpg',
-            '1.png',
+            '1.jpg',
         ];
         $rand = random_int(0, count($backgrounds) - 1);
 
-        return $http . '/public/images/backgrounds/' . $backgrounds[$rand];
+        return $http . '/images/backgrounds/' . $backgrounds[$rand];
     }
 }

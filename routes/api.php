@@ -23,6 +23,7 @@ Route::get('clubs', [ClubController::class, 'showAllClub'])->prefix('club');
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('just-name', [SubscriptionController::class, 'showJustNameSubscription'])->prefix('subscription');
     Route::group(['middleware' => ['is_admin']], function () {
         // Club ( CRUD )
 
@@ -43,7 +44,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     Route::group(['middleware' => ['is_manager']], function () {
-        Route::get('just-name', [SubscriptionController::class, 'showJustNameSubscription'])->prefix('subscription');
+
         Route::post('update', [ClubController::class, 'updateClub'])->prefix('club');
         Route::get('my-club', [ClubController::class, 'myClub'])->prefix('club');
         Route::get('my-single-club-subscription/{id}', [ClubController::class, 'mySingleClubSubscription'])->prefix('club');
@@ -72,6 +73,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/add-table', [TrainerController::class, 'addTable'])->prefix('trainer');
         Route::get('/get-my-tables', [TrainerController::class, 'getAllTables'])->prefix('trainer');
         Route::post('/delete-table', [TrainerController::class, 'deleteTable'])->prefix('trainer');
+        Route::get('/get-table-ingredient',[TrainerController::class,'getTableIngredient'])->prefix("trainer");
+        Route::post('/add-table-ingredient',[TrainerController::class,'addTableIngredient'])->prefix("trainer");
+        Route::post('/delete-table-ingredient',[TrainerController::class,'deleteTableIngredient'])->prefix("trainer");
+        Route::post('/update-table-ingredient',[TrainerController::class,'updateTableIngredient'])->prefix("trainer");
     });
 });
 

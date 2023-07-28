@@ -5,8 +5,11 @@
             style="height: 100vh;">
 
             <md-table-toolbar>
-                <div class="md-toolbar-section-start">
-                    <h1 class="md-title">Diets</h1>
+                <div class="md-toolbar-section-start row-reverse">
+                    <h1 class="md-title">Diets Ingredient</h1>
+                    <md-button class="md-icon-button" @click="showAddNewClubModal">
+                        <md-icon>add</md-icon>
+                    </md-button>
                 </div>
 
                 <md-field md-clearable class="md-toolbar-section-end">
@@ -14,18 +17,15 @@
                 </md-field>
             </md-table-toolbar>
 
-            <md-table-empty-state md-label="No diets found"
-                :md-description="`No diet found quere. Try a different search term or create a new diet.`">
-                <md-button class="md-primary md-raised" @click="showAddNewClubModal">Create New Diet</md-button>
+            <md-table-empty-state md-label="No Ingredients found"
+                :md-description="`No Ingredients found quere. Try a different search term or create a new Ingredient.`">
+                <md-button class="md-primary md-raised" @click="showAddNewClubModal">Create New Ingredient</md-button>
             </md-table-empty-state>
             <md-table-row slot="md-table-row" slot-scope="{ item }">
                 <md-table-cell md-label="ID" md-numeric>{{ item.id }}</md-table-cell>
-                <md-table-cell md-label="Name">
-                    <p class="my-auto" style="cursor: pointer;font-weight: bold;" @click="onClubSelected(item)">{{ item.name
-                    }}</p>
+                <md-table-cell md-label="Ingredient">{{ item.ingredient }}
                 </md-table-cell>
-                <md-table-cell md-label="Items Count">{{ item.items_count }}</md-table-cell>
-                <md-table-cell md-label="Customer Count">{{ item.customer_count }}</md-table-cell>
+                <md-table-cell md-label="Quantity">{{ item.quantity }}</md-table-cell>
 
                 <md-table-cell md-label="Actions">
                     <md-button @click="showEditNewClubModal(item)" class="md-icon-button">
@@ -42,11 +42,12 @@
             <!-- <md-table-pagination :md-page-size="2" :md-page-options="[1, 2, 3, 4, 5, 6]" :md-update="updatePagination"
                 :md-data="users" :md-paginated-data.sync="paginatedClubs" /> -->
         </md-table>
-        <md-dialog-confirm :md-active.sync="remove_club_dialog_active" md-title="Removing Diet"
-            :md-content="`Do you really want to remove <strong>${remove_club.name}</strong> ?`" md-confirm-text="Yes"
+        <md-dialog-confirm :md-active.sync="remove_club_dialog_active" md-title="Removing Ingredient"
+            :md-content="`Do you really want to remove <strong>${remove_club.ingredient}</strong> ?`" md-confirm-text="Yes"
             md-cancel-text="No" @md-cancel="() => remove_club = {}" @md-confirm="onClubRemoveConfirm" />
     </div>
 </template>
+
 
 <script>
 const toLower = text => {
@@ -60,15 +61,11 @@ const searchByName = (items, term) => {
 
     return items
 }
-import CreateNewEatingTableDialog from '../../components/dialogs/CreateNewEatingTableDialog.vue'
-import EditClubDialog from '../../components/dialogs/EditClubDialog.vue'
+import CreateNewEatingTableIngredientDialog from '../../components/dialogs/CreateNewEatingTableIngredientDialog.vue'
+import UpdateEatingTableIngredientDialog from '../../components/dialogs/UpdateEatingTableIngredientDialog.vue'
 
 export default {
-    mounted() {
-        this.getAllClubs();
-
-    },
-
+    props: ['id'],
     data: () => ({
         search: null,
         searched: [],
@@ -79,37 +76,40 @@ export default {
         remove_club: {},
         remove_club_dialog_active: false,
     }),
+    mounted() {
+        this.getIngredients();
+    },
     methods: {
-        getAllClubs() {
-            this.isLoading = true;
-            axios.get('/trainer/api/get-my-tables')
+        getIngredients() {
+            axios.get(`/trainer/api/get-table-ingredient?id=${this.id}`)
                 .then((response) => {
                     let data = response.data;
                     if (data.code == 200) {
-                        this.clubs = data.tables;
+                        this.clubs = data.items;
                         this.searched = this.clubs;
                     }
                     this.isLoading = false;
                 })
-                .catch((error) => {
-                    this.$toast.error("Error");
-                    console.error(error);
-                    this.isLoading = false;
-                });
-
-
+                .catch(this.handleError);
+        },
+        handleError(error) {
+            this.$toast.error("Error please try again later.");
+            console.error(error);
         },
         searchOnTable() {
             this.searched = searchByName(this.clubs, this.search)
         },
         showAddNewClubModal() {
-            this.$modal.show(CreateNewEatingTableDialog)
+            this.$modal.show(CreateNewEatingTableIngredientDialog)
                 .then(this.createNewEatingTable)
                 .catch(error => { });
         },
         createNewEatingTable(table) {
             this.addNewClubStatus = true;
-            axios.post('/trainer/api/add-table', table)
+            axios.post('/trainer/api/add-table-ingredient', {
+                ...table,
+                eat_table_id: this.id
+            })
                 .then((response) => {
                     this.addNewClubStatus = false;
                     let data = response.data;
@@ -117,7 +117,7 @@ export default {
                         this.$toast.success(data.msg);
                     else
                         this.$toast.warning(data.msg);
-                    this.getAllClubs();
+                    this.getIngredients();
                 })
                 .catch((error) => {
                     this.addNewClubStatus = false;
@@ -125,46 +125,31 @@ export default {
                     this.$toast.error('Error try again later.');
                 })
         },
-        onClubSelected(club) {
-            this.$router.push({
-                name: 'ingredient-page',
-                params: { id: club.id }
-            })
-        },
-
         showEditNewClubModal(oldClub) {
             this.clubsCopy = JSON.parse(JSON.stringify(this.clubs));
-            this.$modal.show(EditClubDialog, {
-                club: oldClub
+            this.$modal.show(UpdateEatingTableIngredientDialog, {
+                item: oldClub
             })
-                .then(club => {
-                    // send edit manager to server
-                    axios.post('/api/edit_club_manager', {
-                        manager_id: club.manager.id,
-                        name: club.manager.name,
-                        email: club.manager.email,
-                        password: club.manager.password,
-                    }).then((res) => {
-                        let data = res.data;
-                        if (data.code == 200) {
-                            let manager = data.manager;
-                            let index = this.clubs.indexOf(oldClub);
-                            if (index > -1) {
-                                this.clubs[index].manager = manager;
-                                this.searched = this.clubs;
-                            }
-                            this.$toast.success(data.msg);
-                        } else {
-                            this.$toast.warning(data.msg);
-                        }
-                    })
-                        .catch(this.handleError);
-                })
-                .catch((_) => {
+                .then(this.editIngredient)
+                .catch((e) => {
+                    console.error(e);
                     this.clubs = [... this.clubsCopy];
                     this.searched = this.clubs;
                 })
 
+        },
+        editIngredient(item) {
+            this.addNewClubStatus = true;
+            // send edit manager to server
+            axios.post('/trainer/api/update-table-ingredient', item).then((res) => {
+                let data = res.data;
+                if (data.code == 200) {
+                    this.$toast.success(data.msg);
+                } else {
+                    this.$toast.warning(data.msg);
+                }
+            })
+                .catch(this.handleError);
         },
         updatePagination(page, pageSize, sort, sortOrder) {
             console.log('pagination has updated', page, pageSize, sort, sortOrder);
@@ -174,7 +159,7 @@ export default {
             this.remove_club_dialog_active = true;
         },
         onClubRemoveConfirm() {
-            axios.post('/trainer/api/delete-table', {
+            axios.post('/trainer/api/delete-table-ingredient', {
                 id: this.remove_club.id,
             })
                 .then((res) => {
@@ -194,19 +179,11 @@ export default {
                 })
                 .catch(this.handleError)
         },
-        handleError(error) {
-            this.$toast.error("Error please try again later.");
-            console.error(error);
-        }
     }
-
 }
 </script>
-
 <style scoped>
-.spinner {
-    top: 50%;
-    right: 33.34%;
-    position: absolute;
+.row-reverse {
+    flex-direction: row-reverse !important;
 }
 </style>

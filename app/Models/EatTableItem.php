@@ -10,9 +10,9 @@ class EatTableItem extends Model
 {
     use HasFactory;
     protected $fillable = [
-        "eat_table_id ",
-        "ingredient ",
-        "quantity ",
+        "eat_table_id",
+        "ingredient",
+        "quantity",
     ];
     public function eat_table(): BelongsTo
     {
