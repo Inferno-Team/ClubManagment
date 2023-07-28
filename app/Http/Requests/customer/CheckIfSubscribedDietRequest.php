@@ -33,8 +33,9 @@ class CheckIfSubscribedDietRequest extends FormRequest
     }
     protected function failedValidation(Validator $validator)
     {
+        info($this->club_id);
         throw new HttpResponseException(LocalResponse::returnError(
-            'Error in check clubs subscription',
+            'Error in check diet subscription',
             401,
             $validator->errors()
         ));

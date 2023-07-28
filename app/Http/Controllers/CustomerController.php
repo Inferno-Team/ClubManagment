@@ -45,12 +45,24 @@ class CustomerController extends Controller
         $old_user_diet = UserEatTable::where('user_id', $user->id)
             ->where('table_id', $request->id)->first();
         if (!empty($old_user_diet))
-            return LocalResponse::returnMessage("You are already subscribe to to this diet.");
+            return LocalResponse::returnMessage("You are already subscribe to to this diet.", 200);
         $user_diet = UserEatTable::create([
             'user_id' => $user->id,
             'table_id' => $request->id,
         ]);
-        return LocalResponse::returnData("user_diet", $user_diet, 'Created Successfully');
+        return LocalResponse::returnData("user_diet", $user_diet, 'Subscribed Successfully');
+    }
+    public function unSubscribeToTable(SubscribeToDietRequest $request)
+    {
+        $user = Auth::user();
+        $old_user_diet = UserEatTable::where('user_id', $user->id)
+            ->where('table_id', $request->id)->first();
+        if (!empty($old_user_diet)) {
+            $old_user_diet->delete();
+            return LocalResponse::returnMessage("Un Subscribed Successfully.", 200);
+        } else {
+            return LocalResponse::returnMessage("you need to subscribe First.", 200);
+        }
     }
     public function checkIfSubscribed(CheckIfSubscribedRequest $request)
     {
@@ -71,14 +83,23 @@ class CustomerController extends Controller
         $table = EatTable::where('id', $request->club_id)->first();
         $customer = Auth::user();
         $customer_table = UserEatTable::where('user_id', $customer->id)
-            ->where('table_id', $table->id)->get();
+            ->where('table_id', $table->id)->first();
         return LocalResponse::returnData('subscribed', (object)[
-            'value' => count($customer_table) != 0
+            'value' => !empty($customer_table)
         ]);
     }
     public function singleClubSubscription(Request $request)
     {
         $subs = ClubSubScription::where('club_id', $request->id)->get()->map->formatForCusotmer();
         return LocalResponse::returnData('subs', $subs, 'found', !empty($subs) ? 200 : 401);
+    }
+
+    public function getMyDietsSubscriptions()
+    {
+        $customer = Auth::user();
+        $subs = UserEatTable::where('user_id', $customer->id)->with('table')->get();
+        $ids = $subs->pluck('table.id')->values();
+        $tables = EatTable::whereIn('id', $ids)->get()->map->formatForCustomers();
+        return LocalResponse::returnData('tables', $tables);
     }
 }
