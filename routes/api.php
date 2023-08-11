@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/check-if-subscribed-diet',[CustomerController::class, 'checkIfSubscribedDiet'])->prefix('customer');
         Route::get('/get-single-club-subscription', [CustomerController::class, 'singleClubSubscription'])->prefix('customer');
         Route::get('/get-my-diet-subscription', [CustomerController::class, 'getMyDietsSubscriptions'])->prefix('customer');
+        Route::post('/attend',[CustomerController::class, 'makeAttend']);
 
     });
     Route::group(['middleware' => ['not_customer']], function () {

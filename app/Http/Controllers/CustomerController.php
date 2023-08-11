@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\customer\CheckIfSubscribedDietRequest;
 use App\Http\Requests\customer\CheckIfSubscribedRequest;
+use App\Http\Requests\customer\MakeAttendRequest;
 use App\Http\Requests\customer\SubscribeToDietRequest;
 use App\Http\Requests\CustomerSubscribeRequest;
 use App\Models\UserSubscription;
 use Illuminate\Http\Request;
 use App\Http\Traits\LocalResponse;
+use App\Models\Attendency;
 use App\Models\Club;
 use App\Models\ClubSubScription;
 use App\Models\EatTable;
@@ -101,5 +103,23 @@ class CustomerController extends Controller
         $ids = $subs->pluck('table.id')->values();
         $tables = EatTable::whereIn('id', $ids)->get()->map->formatForCustomers();
         return LocalResponse::returnData('tables', $tables);
+    }
+
+    public function makeAttend(MakeAttendRequest $request)
+    {
+        $user = Auth::user();
+        $club_id = $request->club_id;
+        $sub = UserSubscription::where('customer_id', $user->id)->whereHas('sub', function ($queryBuilder) use ($club_id) {
+            $queryBuilder->where('club_id', $club_id);
+        })->first();
+        if (empty($sub)) {
+            return LocalResponse::returnMessage("you can't make attend to club you not subscriped to");
+        }
+        info($sub);
+        $attend = Attendency::create([
+            "user_id" => $user->id,
+            "club_sub" => $sub->subscription_id
+        ]);
+        return LocalResponse::returnMessage("attend created successfully.");
     }
 }

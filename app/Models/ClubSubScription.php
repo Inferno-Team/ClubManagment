@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ClubSubScription extends Model
 {
@@ -115,6 +116,29 @@ class ClubSubScription extends Model
             "club" => $this->club->format(),
         ];
     }
+
+    private function attendenciesToday()
+    {
+        $attends = $this->attendencies()->whereDay('created_at', '=', Carbon::now()->day)->get();
+        $records = $attends->groupBy(function ($val) {
+            return Carbon::parse($val->created_at)->format('H');
+        });
+        $attendData = [];
+        for ($i = 0; $i < 24; $i++)
+            $attendData[$i] = 0;
+        foreach ($records as $hour => $attendencies) {
+            $rev = 0;
+            foreach ($attendencies as $attendency) {
+                $rev = $rev + 1;
+            }
+            $attendData[$hour] = $rev;
+        }
+        return [
+            'keys' => array_keys($attendData),
+            'values' => array_values($attendData)
+        ];
+    }
+
     public function format()
     {
         $this_month_sub = $this->user_subscriptions()->whereMonth(
@@ -126,8 +150,8 @@ class ClubSubScription extends Model
             'id' => $this->id,
             'subscription' => $this->subscription->format(),
             'price' => $this->price,
-            'user_subscriptions' => $this->getThisYearCustomersSubscriptions(),
-            'customers' => $this->getCustomers(),
+            // 'user_subscriptions' => $this->getThisYearCustomersSubscriptions(),
+            'attendencies_today' => $this->attendenciesToday(),
             'customers' => $this->getCustomers(),
             'user_subscriptions_count' => count($this->user_subscriptions),
             'this_month_subs' => $this->getThisMonthSubscriptionCount(),
@@ -141,5 +165,9 @@ class ClubSubScription extends Model
             'subscription' => $this->subscription->format(),
             'price' => $this->price,
         ];
+    }
+    public function attendencies(): HasMany
+    {
+        return $this->hasMany(Attendency::class, "club_sub");
     }
 }
