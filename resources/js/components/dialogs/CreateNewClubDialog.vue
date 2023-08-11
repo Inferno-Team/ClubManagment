@@ -17,11 +17,12 @@
             </md-field>
             <md-field>
                 <label for="club_lat">Location lat</label>
-                <md-input id="club_lat" @change="validate" type="number" v-model="club.lat" required />
+                <md-input id="club_lat" @change="validate" type="number" onkeypress="return event.charCode >= 48"
+                    v-model="club.lat" required />
             </md-field>
             <md-field>
                 <label for="club_lng">Loaction lng</label>
-                <md-input id="club_lng" @change="validate" type="number" v-model="club.lng" required />
+                <md-input id="club_lng" @change="validate" onkeypress="return event.charCode >= 48" type="number" v-model="club.lng" required />
             </md-field>
             <md-dialog-title>Manager Detials</md-dialog-title>
             <md-field>

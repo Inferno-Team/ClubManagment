@@ -10,7 +10,7 @@
             </md-field>
             <md-field>
                 <label>Subscription Price</label>
-                <md-input type="number" v-model="price" required />
+                <md-input type="number" v-model="price" onkeypress="return event.charCode >= 48" required />
             </md-field>
 
         </md-dialog-content>

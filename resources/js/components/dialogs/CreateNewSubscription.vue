@@ -8,7 +8,7 @@
             </md-field>
             <md-field>
                 <label>Subscription Duration</label>
-                <md-input @change="validate" type="text" v-model="sub.duration" required />
+                <md-input @change="validate" type="number" onkeypress="return event.charCode >= 48" v-model="sub.duration" required />
             </md-field>
         </md-dialog-content>
 

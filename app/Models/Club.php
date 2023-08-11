@@ -9,10 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\returnSelf;
+use Illuminate\Support\Str;
 
 class Club extends Model
 {
@@ -37,7 +34,10 @@ class Club extends Model
                 if (!empty($this->getRawOriginal('image')))
                     $orgin = $this->getRawOriginal('image');
                 $http = request()->getSchemeAndHttpHost();
-                $path = '/images/' . $orgin;
+                if (Str::contains($http, '127.0.0.1') || Str::contains($http, 'localhost'))
+                    $path = '/images/' . $orgin;
+                else
+                    $path = '/public/images/' . $orgin;
                 return $http . $path;
             }
         );
@@ -170,5 +170,4 @@ class Club extends Model
             "customer_sub" => $this->customer_sub->map->formatWithoutSubscriotionRelation(),
         ];
     }
-
 }
