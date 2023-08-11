@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helpers\FileHelper;
-use App\Http\Requests\Clubs\CreateClubRequest;
-use App\Http\Requests\Clubs\DeleteClubRequest;
+use App\Http\Requests\clubs\CreateClubRequest;
+use App\Http\Requests\clubs\DeleteClubRequest;
 use App\Http\Requests\clubs\DeleteClubSubscrpitionRequest;
-use App\Http\Requests\Clubs\EditClubManager;
+use App\Http\Requests\clubs\EditClubManager;
 use App\Http\Requests\manager\MakeClubSubscrpitionRequest;
-use App\Http\Requests\Clubs\UpdateClubRequest;
+use App\Http\Requests\clubs\UpdateClubRequest;
 use App\Http\Requests\manager\ApproveCustomerSubscriptionRequest;
 use App\Http\Requests\manager\DeleteCustomerSubscriptionRequest;
 use App\Models\Club;
