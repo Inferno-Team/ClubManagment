@@ -36,9 +36,9 @@ class CreateClubRequest extends FormRequest
             'lng' => 'required|max:90',
             'image' => 'file',
             'manager' => 'required',
-            'manager.name' => 'required',
-            'manager.password' => 'required',
-            'manager.email' => 'required|email|unique:users,email'
+            // 'manager.name' => 'required',
+            // 'manager.password' => 'required',
+            // 'manager.email' => 'required|email|unique:users,email'
         ];
     }
     public function messages()
@@ -66,10 +66,11 @@ class CreateClubRequest extends FormRequest
     }
     public function getManager()
     {
+        $manager = json_decode($this->input('manager'), true);
         return [
-            'name' => $this->manager['name'],
-            'email' => $this->manager['email'],
-            'password' => Hash::make($this->manager['password']),
+            'name' => $manager['name'],
+            'email' => $manager['email'],
+            'password' => Hash::make($manager['password']),
             'type' => 'manager',
         ];
     }

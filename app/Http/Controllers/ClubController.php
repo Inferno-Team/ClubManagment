@@ -18,19 +18,27 @@ use App\Models\ClubSubScription;
 use App\Models\User;
 use App\Models\UserSubscription;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ClubController extends Controller
 {
     public function createNewClub(CreateClubRequest $request)
     {
-        $manager = User::create($request->getManager());
-        $club = Club::create($request->values($manager->id));
-        if ($request->hasFile('image'))
-            $club->image = FileHelper::uploadFileOnPublic($request->file('image'));
-        $club->update();
-        // $club = Club::find($club->id)->with('manager');
-        $club->manager = $manager;
-        return LocalResponse::returnData('club', $club, 'created successfully.', 201);
+        try {
+            DB::beginTransaction();
+            $manager = User::create($request->getManager());
+            $club = Club::create($request->values($manager->id));
+            if ($request->hasFile('image'))
+                $club->image = FileHelper::uploadFileOnPublic($request->file('image'));
+            $club->update();
+            // $club = Club::find($club->id)->with('manager');
+            $club->manager = $manager;
+            DB::commit();
+            return LocalResponse::returnData('club', $club, 'created successfully.', 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return LocalResponse::returnMessage($e->getMessage(), 401);
+        }
     }
     public function deleteClub(DeleteClubRequest $request)
     {

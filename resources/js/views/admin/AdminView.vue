@@ -11,7 +11,7 @@
         </div>
         <div class="floating-container">
             <div class="floating-button" @click.prevent="logout">
-                <md-icon class="p-4" >logout</md-icon>
+                <md-icon class="p-4">logout</md-icon>
             </div>
         </div>
     </div>
@@ -71,7 +71,18 @@ export default {
         },
         addNewClub(club) {
             this.addNewClubStatus = true;
-            axios.post('/club/api/create_club', club)
+            var formData = new FormData();
+            formData.append("image", club.image);
+            formData.append("name", club.name);
+            formData.append("location", club.location);
+            formData.append("lat", club.lat);
+            formData.append("lng", club.lng);
+            formData.append("manager", JSON.stringify(club.manager));
+            axios.post('/club/api/create_club', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then((response) => {
                     this.addNewClubStatus = false;
                     let data = response.data;

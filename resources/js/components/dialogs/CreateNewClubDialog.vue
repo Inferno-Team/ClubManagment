@@ -8,6 +8,10 @@
                 <md-input @change="validate" type="text" v-model="club.name" required />
             </md-field>
             <md-field>
+                <label>Club Image</label>
+                <md-file v-model="club.image_name" accept="image/*" @md-change="onFileChange" />
+            </md-field>
+            <md-field>
                 <label>Club Location</label>
                 <md-input @change="validate" type="text" v-model="club.location" required />
             </md-field>
@@ -52,6 +56,8 @@ export default {
             location: '',
             lat: '',
             lng: '',
+            image_name: null,
+            image: null,
             manager: {
                 name: '',
                 password: '',
@@ -71,6 +77,12 @@ export default {
                 && this.club.manager.password != ''
                 && this.club.manager.email != '');
 
+        },
+        onFileChange(files) {
+            if (files != null && files.length > 0) {
+                this.club.image = files[0];
+                console.log(this.club.image);
+            }
         }
     }
 }

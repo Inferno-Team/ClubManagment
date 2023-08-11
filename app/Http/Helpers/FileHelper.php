@@ -16,6 +16,7 @@ class FileHelper
         $prefix = "image_"
     ) {
         if (empty($file)) return "";
+        if (empty($name) || $name === '') $name = time();
         $filename = $prefix . $name . "." . $file->getClientOriginalExtension(); # image_372198371289.png
         $file->move(public_path($filePath), $filename);
         return $filename;
