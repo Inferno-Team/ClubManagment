@@ -34,7 +34,7 @@ class Club extends Model
                 if (!empty($this->getRawOriginal('image')))
                     $orgin = $this->getRawOriginal('image');
                 $http = request()->getSchemeAndHttpHost();
-                if (Str::contains($http, '127.0.0.1') || Str::contains($http, 'localhost'))
+                if (Str::contains($http, '127.0.0.1') || Str::contains($http, 'localhost')|| Str::contains($http, '192'))
                     $path = '/images/' . $orgin;
                 else
                     $path = '/public/images/' . $orgin;

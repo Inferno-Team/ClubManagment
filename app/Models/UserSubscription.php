@@ -103,4 +103,19 @@ class UserSubscription extends Model
             "sub"  => $this->sub->format(),
         ];
     }
+    public function formatForUser(){
+        $sub = $this->sub;
+        $club = $sub->club;
+        $manager = $club->manager;
+        $club->manager = $manager;
+        return (object)[
+            'club' => $club,
+            'sub_type' => $sub->subscription,
+            'is_valid' => $this->is_valid,
+            'approved' => $this->approved,
+            "start_at"  => $this->start_at,
+            "end_at"  => $this->end_at,
+            "price"  => $this->price,
+        ];
+    }
 }

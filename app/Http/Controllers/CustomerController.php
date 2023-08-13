@@ -105,6 +105,11 @@ class CustomerController extends Controller
         return LocalResponse::returnData('tables', $tables);
     }
 
+    public function getMySubscriptions(){
+        $user = Auth::user();
+        $subs = UserSubscription::where('customer_id',$user->id)->get()->map->formatForUser();
+        return LocalResponse::returnData("subs",$subs);
+    }
     public function makeAttend(MakeAttendRequest $request)
     {
         $user = Auth::user();
